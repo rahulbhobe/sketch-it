@@ -5,11 +5,14 @@ html, body {
   background: #d3d3d3;  
 }
 
+
 #container {
   display: grid;
   height: 100vh;
   grid-template-columns: auto 300px;
-  grid-template-rows: 50px auto 30px;
+  --header-height: 50px;
+  --footer-height: 30px;
+  grid-template-rows: var(--header-height) auto var(--footer-height);
   grid-template-areas: 
     "header header"
     "canvas sidebar"
@@ -24,12 +27,12 @@ html, body {
 
 #header {
   grid-area: header;
-  line-height: 50px;
+  line-height: var(--header-height) ;
 }
 
 #footer {
   grid-area: footer;
-  line-height: 30px;
+  line-height: var(--footer-height) ;
 }
 
 #canvas {
