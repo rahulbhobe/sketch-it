@@ -1,0 +1,50 @@
+{
+  "name": "sketch-it",
+  "version": "1.0.0",
+  "description": "Sketch It",
+  "main": "server/generated/main.js",
+  "scripts": {
+    "start": "node server/generated/main.js",
+    "postinstall": "npm run build",
+    "build": "npm run client-build && npm run server-build",
+    "watch": "npm run client-watch &  npm run server-watch",
+    "client-build": "browserify            -g browserify-css -t [ babelify --presets [ react env ] --plugins [ transform-class-properties transform-object-rest-spread ] ] www/react/* www/store/* -o www/generated/sketch_it_bundle.js",
+    "client-watch": "watchify   --debug -v -g browserify-css -t [ babelify --presets [ react env ] --plugins [ transform-class-properties transform-object-rest-spread ] ] www/react/* www/store/* -o www/generated/sketch_it_bundle.js",
+    "server-build": "babel         --presets env --plugins transform-class-properties server/src --out-dir server/generated",
+    "server-watch": "babel --watch --presets env --plugins transform-class-properties server/src --out-dir server/generated"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "bootstrap": "4.0.0",
+    "classnames": "2.2.5",
+    "debounce": "1.1.0",
+    "ejs": "2.5.7",
+    "es6-promisify": "5.0.0",
+    "express": "4.16.2",
+    "jquery": "3.3.1",
+    "popper.js": "1.12.9",
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "react-grid-layout": "0.16.2",
+    "react-redux": "5.0.6",
+    "redux": "3.7.2",
+    "request": "2.83.0",
+    "serve-favicon": "2.4.5",
+    "shortid": "2.2.8"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-react": "6.24.1",
+    "babelify": "8.0.0",
+    "browserify": "15.2.0",
+    "browserify-css": "0.14.0"
+  }
+}
