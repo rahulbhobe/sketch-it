@@ -1,4 +1,5 @@
 import React from 'react';
+import Canvas from './canvas';
 
 let HeaderView = () => {
   return (<div id="header">
@@ -9,12 +10,6 @@ let HeaderView = () => {
 let FooterView = () => {
   return (<div id="footer">
             &copy; Copyright 2018 Autodesk, Inc.
-          </div>);
-};
-
-let Canvas = () => {
-  return (<div id="canvas">
-            <svg id="svg"/>
           </div>);
 };
 
