@@ -1,9 +1,12 @@
 import React from 'react';
+import CanvasEvents from './canvas_events';
 
-let Canvas = () => {
-  return (<div id="canvas">
-            <svg id="svg"/>
-          </div>);
+class Canvas extends React.Component {
+  render () {
+    return (<div id="canvas">
+              <svg id="svg" ref='svg' />
+            </div>);
+  };
 };
 
-export default Canvas;
+export default CanvasEvents(Canvas);
