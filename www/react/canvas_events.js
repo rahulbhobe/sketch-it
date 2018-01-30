@@ -10,8 +10,24 @@ let CanvasEvents = (WrappedComponent) => {
       this.onMouseLeave = this.onMouseLeave.bind(this);
     };
 
+    getSvg () {
+      return this.refs.wrapped.refs.svg;
+    };
+
+    getSvgRect () {
+      return this.getSvg().getBoundingClientRect();
+    };
+
+    getPositionAtEvent (event) {
+      let boundingRect   = this.getSvgRect();
+      return {
+        x: event.clientX - boundingRect.left,
+        y: event.clientY - boundingRect.top
+      };
+    };
+
     componentDidMount () {
-      let svg = this.refs.wrapped.refs.svg;
+      let svg = this.getSvg();
       svg.addEventListener('mousemove', this.onMouseMove, false);
       svg.addEventListener('mouseup', this.onMouseUp, false);
       svg.addEventListener('mousedown', this.onMouseDown, false);
@@ -19,26 +35,26 @@ let CanvasEvents = (WrappedComponent) => {
     };
 
     componentWillUnmount () {
-      let svg = this.refs.wrapped.refs.svg;
+      let svg = this.getSvg();
       svg.removeEventListener('mousemove', this.onMouseMove, false);
       svg.removeEventListener('mouseup', this.onMouseUp, false);
       svg.removeEventListener('mousedown', this.onMouseDown, false);
       svg.removeEventListener('mouseleave', this.onMouseLeave, false);
     };
 
-    onMouseMove () {
+    onMouseMove (event) {
       console.log('mouse moved');
     };
 
-    onMouseUp () {
-      console.log('mouse up');
+    onMouseUp (event) {
+      console.log('mouse up', this.getPositionAtEvent(event));
     };
 
-    onMouseDown () {
-      console.log('mouse down');
+    onMouseDown (event) {
+      console.log('mouse down', this.getPositionAtEvent(event));
     };
 
-    onMouseLeave () {
+    onMouseLeave (event) {
       console.log('mouse leave');
     };
 
