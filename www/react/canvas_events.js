@@ -85,7 +85,7 @@ let CanvasEvents = (WrappedComponent) => {
     };
 
     onContextMenu (event) {
-      console.log('sss');
+      console.log('context menu');
       event.preventDefault();
       return false;
     };

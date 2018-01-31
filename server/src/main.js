@@ -1,7 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import favicon from 'serve-favicon';
-import shortid from 'shortid';
 
 let app =  express();
 app.use(bodyParser.urlencoded({ extended: false }));
