@@ -80,12 +80,14 @@ let CanvasEvents = (WrappedComponent) => {
       console.log('mouse wheel');
     };
 
-    onMouseWheelDoc (event) {
-      console.log('mouse wheel doc');
-    };
-
     onContextMenu (event) {
       console.log('context menu');
+      event.preventDefault();
+      return false;
+    };
+
+    onMouseWheelDoc (event) {
+      console.log('mouse wheel doc');
       event.preventDefault();
       return false;
     };
