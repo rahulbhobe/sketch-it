@@ -173,7 +173,7 @@ class CanvasEvents extends React.Component {
     let startAngle      = data.startData.angle;
     let startPosition   = data.startData.position;
     let currentPosition = this.getPositionAtEvent(event);
-    let midPoint        = Vector.create(this.getWindowWidth()*0.5, this.getWindowHeight()*0.5);
+    let midPoint        = Vector.create(this.getSvgRect().width*0.5, this.getSvgRect().height*0.5);
     let startVec        = Vector.create(startPosition.x, startPosition.y).subtract(midPoint);
     let currentVec      = Vector.create(currentPosition.x, currentPosition.y).subtract(midPoint);
     let angle           = AngleConverter.toDeg(currentVec.angleFrom(startVec));
