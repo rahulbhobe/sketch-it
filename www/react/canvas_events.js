@@ -1,8 +1,11 @@
 import React from 'react';
 import debounce from 'debounce';
+import {Vector, MatrixTransformations} from '../mathutils/gl_matrix_wrapper';
+import ReduxUtils from '../utils/redux_utils';
+import AngleConverter from '../mathutils/angle_converter';
+import store from '../store/store';
 
-let CanvasEvents = (WrappedComponent) => {
-  return class extends React.Component {
+  class CanvasEvents extends React.Component {
     constructor(props) {
       super(props);
 
@@ -18,12 +21,8 @@ let CanvasEvents = (WrappedComponent) => {
       this.resetEventDataDebounce = debounce(this.resetEventDataDebounce.bind(this), 200);
     };
 
-    getSvg () {
-      return this.refs.wrapped.refs.svg;
-    };
-
     getSvgRect () {
-      return this.getSvg().getBoundingClientRect();
+      return this.props.getSvg().getBoundingClientRect();
     };
 
     getPositionAtEvent (event) {
@@ -35,7 +34,7 @@ let CanvasEvents = (WrappedComponent) => {
     };
 
     componentDidMount () {
-      let svg = this.getSvg();
+      let svg = this.props.getSvg();
       svg.addEventListener('mousemove', this.onMouseMove, false);
       svg.addEventListener('mouseup', this.onMouseUp, false);
       svg.addEventListener('mousedown', this.onMouseDown, false);
@@ -48,7 +47,7 @@ let CanvasEvents = (WrappedComponent) => {
     };
 
     componentWillUnmount () {
-      let svg = this.getSvg();
+      let svg = this.props.getSvg();
       svg.removeEventListener('mousemove', this.onMouseMove, false);
       svg.removeEventListener('mouseup', this.onMouseUp, false);
       svg.removeEventListener('mousedown', this.onMouseDown, false);
@@ -60,60 +59,166 @@ let CanvasEvents = (WrappedComponent) => {
       svg.oncontextmenu = null;
     };
 
-    onMouseMove (event) {
-      console.log('mouse moved');
-    };
+  onContextMenu (event) {
+    event.preventDefault();
+    return false;
+  };
 
-    onMouseUp (event) {
-      console.log('mouse up', this.getPositionAtEvent(event));
-    };
+  onMouseWheelDoc (event) {
+    event.preventDefault();
+    return false;
+  };
 
-    onMouseDown (event) {
-      console.log('mouse down', this.getPositionAtEvent(event));
-    };
+  onMouseDown (event) {
+    var {origin, rotationAngle, zoomFactor} = this.props;
+    console.log(origin);
+    console.log(rotationAngle);
+    console.log(zoomFactor);
+    let dataType = 'none';
+    let data     = {};
 
-    onMouseLeave (event) {
-      console.log('mouse leave');
-    };
+    if (!event.shiftKey) {
+      dataType = 'pan';
+      data.origin = this.props.origin;
+    } else {
+      dataType = 'rotate';
+      data.angle = this.props.rotationAngle;
+    }
 
-    onMouseWheel (event) {
-      console.log('mouse wheel');
-    };
+    this.props.actions.setEventData(dataType, this.getPositionAtEvent(event), data);
+  };
 
-    onContextMenu (event) {
-      console.log('context menu');
+  onMouseMove (event) {
+    let data = store.getState().eventData;
+    if (data.type === 'pan') {
+      this.handlePan(event);
+    } else if (data.type === 'rotate') {
+      this.handleRotate(event);
+    }
+  };
+
+  onMouseUp (event) {
+    let data     = store.getState().eventData;
+    if (data.type === 'pan') {
+      this.handlePan(event);
+    } else if (data.type === 'rotate') {
+      this.handleRotate(event);
+    }
+    this.props.actions.resetEventData();
+  };
+
+  onMouseLeave () {
+    this.props.actions.resetEventData();
+  };
+
+  onMouseWheel (event) {
+    event.preventDefault();
+
+    let dataType  = 'none';
+    let data      = {};
+    let wheelDistance = Math.round(event.wheelDeltaY/30);
+    let zoomFactor    = this.props.zoomFactor + wheelDistance;
+    if (zoomFactor < 25) {
+      zoomFactor = 25;
+    } else if (zoomFactor > 200) {
+      zoomFactor = 200;
+    }
+
+    if (wheelDistance > 0) {
+      dataType = 'zoomin';
+      data.zoomFactor = this.props.zoomFactor;
+    } else if (wheelDistance < 0) {
+      dataType = 'zoomout';
+      data.zoomFactor = this.props.zoomFactor;
+    }
+
+    if (zoomFactor !== this.props.zoomFactor) {
+      this.props.actions.setEventData(dataType, this.getPositionAtEvent(event), data);
+      this.props.actions.setZoomFactor(zoomFactor);
+    }
+    this.resetEventDataDebounce();
+    return false;
+  };
+
+  resetEventDataDebounce () {
+    this.props.actions.resetEventData();
+  };
+
+  onResize (e) {
+    this.props.actions.setEventData('resize', {x: -1, y: -1}, {canvasDimensions: this.props.canvasDimensions});
+    this.resetEventDataDebounce();
+    this.setCanvasDimensions();
+  };
+
+  onKeydown (event) {
+    if (event.keyCode === 13) {
       event.preventDefault();
       return false;
-    };
+    }
+    if (event.keyCode !== 27) {
+      return;
+    }
 
-    onMouseWheelDoc (event) {
-      console.log('mouse wheel doc');
-      event.preventDefault();
-      return false;
-    };
+    let data     = store.getState().eventData;
+    if (data.type === 'pan') {
+      this.cancelPan();
+    } else if (data.type === 'rotate') {
+      this.cancelRotate();
+    }
+    this.props.actions.resetEventData();
+  };
 
-    onResize (event) {
-      console.log('resize');
-    };
+  handleRotate (event) {
+    let data            = store.getState().eventData;
+    let startAngle      = data.startData.angle;
+    let startPosition   = data.startData.position;
+    let currentPosition = this.getPositionAtEvent(event);
+    let midPoint        = Vector.create(this.getWindowWidth()*0.5, this.getWindowHeight()*0.5);
+    let startVec        = Vector.create(startPosition.x, startPosition.y).subtract(midPoint);
+    let currentVec      = Vector.create(currentPosition.x, currentPosition.y).subtract(midPoint);
+    let angle           = AngleConverter.toDeg(currentVec.angleFrom(startVec));
+    this.props.actions.setRotationAngle(startAngle + angle);
+  };
 
-    onKeydown (event) {
-      if (event.keyCode === 13) {
-        event.preventDefault();
-        return false;
-      }
-      if (event.keyCode !== 27) {
-        return;
-      }
-    };
+  cancelRotate () {
+    let data = store.getState().eventData;
+    this.props.actions.setRotationAngle(data.startData.angle);
+  };
 
-    resetEventDataDebounce () {
-     console.log('reset event data');
-    };
+  handlePan (event) {
+    let data            = store.getState().eventData;
+    let oldOrigin       = data.startData.origin;
+    let startPosition   = data.startData.position;
+    let currentPosition = this.getPositionAtEvent(event);
+    let startPnt        = Vector.create(startPosition.x, startPosition.y);
+    let currentPnt      = Vector.create(currentPosition.x, currentPosition.y);
+
+    let matrixTrfs      = MatrixTransformations.create();
+    matrixTrfs.append(m => m.rotate(AngleConverter.toRad(this.props.rotationAngle)));
+    matrixTrfs.append(m => m.scale(1 / (this.props.zoomFactor*0.01)));
+
+    let moveVec = matrixTrfs.transformPoint(currentPnt.subtract(startPnt));
+    let org = Vector.create(oldOrigin.x, oldOrigin.y).subtract(moveVec);
+    this.props.actions.setOrigin(org.asObj());
+  };
+
+  cancelPan () {
+    let data = store.getState().eventData;
+    this.props.actions.setOrigin(data.startData.origin);
+  };
+
 
     render() {
-      return <WrappedComponent ref='wrapped'/>;
+      return null;
     }
+  };
+
+let mapStateToProps = (state, ownProps) => {
+  return {
+    zoomFactor: state.zoomFactor,
+    rotationAngle: state.rotationAngle,
+    origin: state.origin
   };
 };
 
-export default CanvasEvents;
+export default ReduxUtils.connect(mapStateToProps, true)(CanvasEvents);
