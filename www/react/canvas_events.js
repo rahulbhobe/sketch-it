@@ -5,59 +5,59 @@ import ReduxUtils from '../utils/redux_utils';
 import AngleConverter from '../mathutils/angle_converter';
 import store from '../store/store';
 
-  class CanvasEvents extends React.Component {
-    constructor(props) {
-      super(props);
+class CanvasEvents extends React.Component {
+  constructor(props) {
+    super(props);
 
-      this.onMouseMove = this.onMouseMove.bind(this);
-      this.onMouseUp = this.onMouseUp.bind(this);
-      this.onMouseDown = this.onMouseDown.bind(this);
-      this.onMouseLeave = this.onMouseLeave.bind(this);
-      this.onMouseWheel = this.onMouseWheel.bind(this);
-      this.onKeydown = this.onKeydown.bind(this);
-      this.onContextMenu = this.onContextMenu.bind(this);
-      this.onMouseWheelDoc = this.onMouseWheelDoc.bind(this);
-      this.onResize = this.onResize.bind(this);
-      this.resetEventDataDebounce = debounce(this.resetEventDataDebounce.bind(this), 200);
-    };
+    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.onMouseWheel = this.onMouseWheel.bind(this);
+    this.onKeydown = this.onKeydown.bind(this);
+    this.onContextMenu = this.onContextMenu.bind(this);
+    this.onMouseWheelDoc = this.onMouseWheelDoc.bind(this);
+    this.onResize = this.onResize.bind(this);
+    this.resetEventDataDebounce = debounce(this.resetEventDataDebounce.bind(this), 200);
+  };
 
-    getSvgRect () {
-      return this.props.getSvg().getBoundingClientRect();
-    };
+  getSvgRect () {
+    return this.props.getSvg().getBoundingClientRect();
+  };
 
-    getPositionAtEvent (event) {
-      let boundingRect   = this.getSvgRect();
-      return {
-        x: event.clientX - boundingRect.left,
-        y: event.clientY - boundingRect.top
-      };
+  getPositionAtEvent (event) {
+    let boundingRect   = this.getSvgRect();
+    return {
+      x: event.clientX - boundingRect.left,
+      y: event.clientY - boundingRect.top
     };
+  };
 
-    componentDidMount () {
-      let svg = this.props.getSvg();
-      svg.addEventListener('mousemove', this.onMouseMove, false);
-      svg.addEventListener('mouseup', this.onMouseUp, false);
-      svg.addEventListener('mousedown', this.onMouseDown, false);
-      svg.addEventListener('mouseleave', this.onMouseLeave, false);
-      svg.addEventListener('mousewheel', this.onMouseWheel, false);
-      window.addEventListener('resize', this.onResize);
-      document.addEventListener('keydown', this.onKeydown, false);
-      document.addEventListener('mousewheel', this.onMouseWheelDoc, false);
-      svg.oncontextmenu = this.onContextMenu;
-    };
+  componentDidMount () {
+    let svg = this.props.getSvg();
+    svg.addEventListener('mousemove', this.onMouseMove, false);
+    svg.addEventListener('mouseup', this.onMouseUp, false);
+    svg.addEventListener('mousedown', this.onMouseDown, false);
+    svg.addEventListener('mouseleave', this.onMouseLeave, false);
+    svg.addEventListener('mousewheel', this.onMouseWheel, false);
+    window.addEventListener('resize', this.onResize);
+    document.addEventListener('keydown', this.onKeydown, false);
+    document.addEventListener('mousewheel', this.onMouseWheelDoc, false);
+    svg.oncontextmenu = this.onContextMenu;
+  };
 
-    componentWillUnmount () {
-      let svg = this.props.getSvg();
-      svg.removeEventListener('mousemove', this.onMouseMove, false);
-      svg.removeEventListener('mouseup', this.onMouseUp, false);
-      svg.removeEventListener('mousedown', this.onMouseDown, false);
-      svg.removeEventListener('mouseleave', this.onMouseLeave, false);
-      svg.removeEventListener('mousewheel', this.onMouseWheel, false);
-      window.removeEventListener('resize', this.onResize);
-      document.removeEventListener('keydown', this.onKeydown, false);
-      document.removeEventListener('mousewheel', this.onMouseWheelDoc, false);
-      svg.oncontextmenu = null;
-    };
+  componentWillUnmount () {
+    let svg = this.props.getSvg();
+    svg.removeEventListener('mousemove', this.onMouseMove, false);
+    svg.removeEventListener('mouseup', this.onMouseUp, false);
+    svg.removeEventListener('mousedown', this.onMouseDown, false);
+    svg.removeEventListener('mouseleave', this.onMouseLeave, false);
+    svg.removeEventListener('mousewheel', this.onMouseWheel, false);
+    window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('keydown', this.onKeydown, false);
+    document.removeEventListener('mousewheel', this.onMouseWheelDoc, false);
+    svg.oncontextmenu = null;
+  };
 
   onContextMenu (event) {
     event.preventDefault();
@@ -207,11 +207,10 @@ import store from '../store/store';
     this.props.actions.setOrigin(data.startData.origin);
   };
 
-
-    render() {
-      return null;
-    }
-  };
+  render() {
+    return null;
+  }
+};
 
 let mapStateToProps = (state, ownProps) => {
   return {
