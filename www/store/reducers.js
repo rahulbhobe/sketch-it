@@ -37,11 +37,19 @@ let originReducer = (state={x:0, y:0}, action) => {
   return state;
 };
 
+let canvasDimensionsReducer = (state={width:-1, height:-1}, action) => {
+  if (action.type === ActionTypes.SET_CANVAS_DIMENSIONS) {
+    return action.value;
+  }
+  return state;
+};
+
 let reducers = combineReducers({
   eventData: setEventDataReducer,
   zoomFactor: zoomFactorReducer,
   rotationAngle: rotationAngleReducer,
-  origin: originReducer
+  origin: originReducer,
+  canvasDimensions: canvasDimensionsReducer
 });
 
 export default reducers;

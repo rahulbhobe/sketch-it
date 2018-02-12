@@ -31,3 +31,7 @@ export let setOrigin = (origin) => {
 export let resetOrigin = () => {
   return { type: ActionTypes.RESET_ORIGIN, value: {x: 0, y: 0} };
 };
+
+export let setCanvasDimensions = (width, height) => {
+  return { type: ActionTypes.SET_CANVAS_DIMENSIONS, value: {width, height} };
+};

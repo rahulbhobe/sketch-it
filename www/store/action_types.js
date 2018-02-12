@@ -6,3 +6,4 @@ export const SET_ROTATION_ANGLE                 = 'SET_ROTATION_ANGLE';
 export const RESET_ROTATION_ANGLE               = 'RESET_ROTATION_ANGLE';
 export const SET_ORIGIN                         = 'SET_ORIGIN';
 export const RESET_ORIGIN                       = 'RESET_ORIGIN';
+export const SET_CANVAS_DIMENSIONS              = 'SET_CANVAS_DIMENSIONS';
