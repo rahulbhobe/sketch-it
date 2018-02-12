@@ -132,6 +132,10 @@ class Matrix {
     Mat2d.multiply(r.m, this.m, b.m);
     return r;
   };
+
+  asArr () {
+    return this.m;
+  };
 };
 
 class MatrixTransformations {
@@ -152,10 +156,14 @@ class MatrixTransformations {
   };
 
   transformPoint (point) {
-    let matrix = this.t.reduceRight((matrix, trf)=>trf(matrix), Matrix.create());
+    let matrix = this.transformMatrix(Matrix.create());
     let r = Vector.create();
     Vec2.transformMat2d(r.v, point.v, matrix.m);
     return r;
+  };
+
+  transformMatrix (mt) {
+    return this.t.reduceRight((matrix, trf)=>trf(matrix), mt);
   };
 };
 
