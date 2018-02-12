@@ -144,6 +144,11 @@ class CanvasEvents extends React.Component {
     this.props.actions.resetEventData();
   };
 
+  setCanvasDimensions () {
+    let {width, height}  = this.getSvgRect();
+    this.props.actions.setCanvasDimensions(width, height);
+  }
+
   onResize (e) {
     this.props.actions.setEventData('resize', {x: -1, y: -1}, {canvasDimensions: this.props.canvasDimensions});
     this.resetEventDataDebounce();
