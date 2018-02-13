@@ -1,4 +1,5 @@
 import {vec2 as Vec2, vec3 as Vec3, mat2d as Mat2d} from 'gl-matrix';
+import almostEqual from 'almost-equal';
 
 class Vector {
   constructor (x, y) {
@@ -66,8 +67,10 @@ class Vector {
   angleFrom (b) {
     let c = Vec3.fromValues(0, 0, 0);
     Vec2.cross(c, this.v, b.v);
-    let sign = c[2] > 0 ? 1 : -1;
+    let sign = c[2] < 0 ? -1 : 1;
     let cos  = this.dot(b) / (this.length() * b.length());
+    if (almostEqual(cos,  1)) cos =  1 - Number.EPSILON;
+    if (almostEqual(cos, -1)) cos = -1 + Number.EPSILON;
     return sign * Math.acos(cos);
   };
 
