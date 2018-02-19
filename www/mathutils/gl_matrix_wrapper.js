@@ -118,9 +118,9 @@ class Matrix {
     return r;
   };
 
-  scale (val) {
+  scale (val1, val2 = val1) {
     let r = Matrix.create();
-    Mat2d.scale(r.m, this.m, Vec2.fromValues(val, val));
+    Mat2d.scale(r.m, this.m, Vec2.fromValues(val1, val2));
     return r;
   };
 
