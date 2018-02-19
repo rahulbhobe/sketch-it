@@ -47,8 +47,8 @@ class Canvas extends React.Component {
     return (<div id="canvas">
               <svg id="svg" ref='svg'>
                 <g transform={this.getTransformAsString()} >
-                  <line x1="0" y1="0" x2="200" y2="200" style={{stroke:"rgb(255,0,0)", strokeWidth:"2"}} />
-                  <circle cx="50" cy="50" r="40" stroke="black" strokeWidth="3" fill="red" />
+                  <line x1="0" y1="0" x2="200" y2="200" stroke="red" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+                  <circle cx="50" cy="50" r="40" stroke="black" strokeWidth="2" vectorEffect="non-scaling-stroke" fill="red" />
                 </g>
               </svg>
               <CanvasEvents getSvg={this.getSvg} />
