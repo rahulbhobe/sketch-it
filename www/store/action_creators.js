@@ -16,12 +16,12 @@ export let resetZoomFactor = () => {
   return { type: ActionTypes.RESET_ZOOM_FACTOR, value: 100 };
 };
 
-export let setRotationAngle = (rotationAngle) => {
-  return { type: ActionTypes.SET_ROTATION_ANGLE, value: rotationAngle };
+export let setUpVector = (upVector) => {
+  return { type: ActionTypes.SET_UP_VECTOR, value: upVector };
 };
 
-export let resetRotationAngle = () => {
-  return { type: ActionTypes.RESET_ROTATION_ANGLE, value: 0 };
+export let resetUpVector = () => {
+  return { type: ActionTypes.RESET_UP_VECTOR, value: {x:0, y: 1} };
 };
 
 export let setOrigin = (origin) => {

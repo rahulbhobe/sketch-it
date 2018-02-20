@@ -19,10 +19,10 @@ let zoomFactorReducer = (state=100, action) => {
   return state;
 };
 
-let rotationAngleReducer = (state=0, action) => {
-  if (action.type === ActionTypes.SET_ROTATION_ANGLE) {
+let upVectorReducer = (state={x:0, y:1}, action) => {
+  if (action.type === ActionTypes.SET_UP_VECTOR) {
     return action.value;
-  } else if (action.type === ActionTypes.RESET_ROTATION_ANGLE) {
+  } else if (action.type === ActionTypes.RESET_UP_VECTOR) {
     return action.value;
   }
   return state;
@@ -47,7 +47,7 @@ let canvasDimensionsReducer = (state={width:-1, height:-1}, action) => {
 let reducers = combineReducers({
   eventData: setEventDataReducer,
   zoomFactor: zoomFactorReducer,
-  rotationAngle: rotationAngleReducer,
+  upVector: upVectorReducer,
   origin: originReducer,
   canvasDimensions: canvasDimensionsReducer
 });

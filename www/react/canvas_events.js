@@ -1,8 +1,7 @@
 import React from 'react';
 import debounce from 'debounce';
-import {Vector, MatrixTransformations} from '../mathutils/gl_matrix_wrapper';
+import {Vector, Matrix} from '../mathutils/gl_matrix_wrapper';
 import ReduxUtils from '../utils/redux_utils';
-import AngleConverter from '../mathutils/angle_converter';
 import store from '../store/store';
 
 class CanvasEvents extends React.Component {
@@ -70,10 +69,6 @@ class CanvasEvents extends React.Component {
   };
 
   onMouseDown (event) {
-    var {origin, rotationAngle, zoomFactor} = this.props;
-    console.log(origin);
-    console.log(rotationAngle);
-    console.log(zoomFactor);
     let dataType = 'none';
     let data     = {};
 
@@ -82,7 +77,7 @@ class CanvasEvents extends React.Component {
       data.origin = this.props.origin;
     } else {
       dataType = 'rotate';
-      data.angle = this.props.rotationAngle;
+      data.upVector = this.props.upVector;
     }
 
     this.props.actions.setEventData(dataType, this.getPositionAtEvent(event), data);
@@ -175,14 +170,17 @@ class CanvasEvents extends React.Component {
 
   handleRotate (event) {
     let data            = store.getState().eventData;
-    let startAngle      = data.startData.angle;
+    let startUpVector   = data.startData.upVector;
     let startPosition   = data.startData.position;
     let currentPosition = this.getPositionAtEvent(event);
     let midPoint        = Vector.create(this.getSvgRect().width*0.5, this.getSvgRect().height*0.5);
     let startVec        = Vector.create(startPosition.x, startPosition.y).subtract(midPoint);
     let currentVec      = Vector.create(currentPosition.x, currentPosition.y).subtract(midPoint);
-    let angle           = AngleConverter.toDeg(currentVec.angleFrom(startVec));
-    this.props.actions.setRotationAngle(startAngle + angle);
+
+    let matrix          = Matrix.create().rotate(-1 * currentVec.angleTo(startVec));
+    let upVector        = matrix.transformPoint(Vector.create(startUpVector.x, startUpVector.y));
+
+    this.props.actions.setUpVector(upVector.asObj());
   };
 
   cancelRotate () {
@@ -195,14 +193,12 @@ class CanvasEvents extends React.Component {
     let oldOrigin       = data.startData.origin;
     let startPosition   = data.startData.position;
     let currentPosition = this.getPositionAtEvent(event);
-    let startPnt        = Vector.create(startPosition.x, startPosition.y);
-    let currentPnt      = Vector.create(currentPosition.x, currentPosition.y);
+    let screenToModel   = this.props.getScreenToModel();
 
-    let matrixTrfs      = MatrixTransformations.create();
-    matrixTrfs.append(m => m.rotate(AngleConverter.toRad(this.props.rotationAngle)));
-    matrixTrfs.append(m => m.scale(1 / (this.props.zoomFactor*0.01)));
+    let startPnt        = screenToModel.transformPoint(Vector.create(startPosition.x, startPosition.y));
+    let currentPnt      = screenToModel.transformPoint(Vector.create(currentPosition.x, currentPosition.y));
+    let moveVec         = currentPnt.subtract(startPnt);
 
-    let moveVec = matrixTrfs.transformPoint(currentPnt.subtract(startPnt));
     let org = Vector.create(oldOrigin.x, oldOrigin.y).subtract(moveVec);
     this.props.actions.setOrigin(org.asObj());
   };
@@ -220,7 +216,7 @@ class CanvasEvents extends React.Component {
 let mapStateToProps = (state, ownProps) => {
   return {
     zoomFactor: state.zoomFactor,
-    rotationAngle: state.rotationAngle,
+    upVector: state.upVector,
     origin: state.origin
   };
 };

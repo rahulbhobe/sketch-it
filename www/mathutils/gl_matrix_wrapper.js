@@ -64,7 +64,7 @@ class Vector {
     return Vec2.distance(this.v, b.v);
   };
 
-  angleFrom (b) {
+  angleTo (b) {
     let c = Vec3.fromValues(0, 0, 0);
     Vec2.cross(c, this.v, b.v);
     let sign = c[2] < 0 ? -1 : 1;
@@ -136,6 +136,12 @@ class Matrix {
     return r;
   };
 
+  transformPoint (point) {
+    let r = Vector.create();
+    Vec2.transformMat2d(r.v, point.v, this.m);
+    return r;
+  };
+
   asArr () {
     return this.m;
   };
@@ -158,16 +164,13 @@ class MatrixTransformations {
     mt.t.forEach(trf => this.append(trf));
   };
 
-  transformPoint (point) {
-    let matrix = this.transformMatrix(Matrix.create());
-    let r = Vector.create();
-    Vec2.transformMat2d(r.v, point.v, matrix.m);
-    return r;
+  getMatrix () {
+    return this.t.reduceRight((matrix, trf)=>trf(matrix), Matrix.create());
   };
 
-  transformMatrix (mt) {
-    return this.t.reduceRight((matrix, trf)=>trf(matrix), mt);
-  };
+  getInverseMatrix () {
+    return this.getMatrix().invert();
+  }
 };
 
 export {Vector, Matrix, MatrixTransformations};
