@@ -168,18 +168,23 @@ class CanvasEvents extends React.Component {
     this.props.actions.resetEventData();
   };
 
+  createVectorFromObj (vecObj) {
+    return Vector.create(vecObj.x, vecObj.y);
+  };
+
+  createVectorInModelCoordinates (vecObj) {
+    let screenToModel = this.props.getScreenToModel();
+    return screenToModel.transformPoint(this.createVectorFromObj(vecObj));
+  };
+
   handleRotate (event) {
     let data            = store.getState().eventData;
-    let startUpVector   = data.startData.upVector;
-    let startPosition   = data.startData.position;
-    let currentPosition = this.getPositionAtEvent(event);
-    let midPoint        = Vector.create(this.getSvgRect().width*0.5, this.getSvgRect().height*0.5);
-    let startVec        = Vector.create(startPosition.x, startPosition.y).subtract(midPoint);
-    let currentVec      = Vector.create(currentPosition.x, currentPosition.y).subtract(midPoint);
+    let midPoint        = this.createVectorInModelCoordinates({x: this.getSvgRect().width*0.5, y: this.getSvgRect().height*0.5});
+    let startVec        = this.createVectorInModelCoordinates(data.startData.position).subtract(midPoint);
+    let currentVec      = this.createVectorInModelCoordinates(this.getPositionAtEvent(event)).subtract(midPoint);
 
-    let matrix          = Matrix.create().rotate(-1 * currentVec.angleTo(startVec));
-    let upVector        = matrix.transformPoint(Vector.create(startUpVector.x, startUpVector.y));
-
+    let matrix          = Matrix.create().rotate(-1 * startVec.angleTo(currentVec));
+    let upVector        = matrix.transformPoint(this.createVectorFromObj(data.startData.upVector));
     this.props.actions.setUpVector(upVector.asObj());
   };
 
@@ -190,16 +195,11 @@ class CanvasEvents extends React.Component {
 
   handlePan (event) {
     let data            = store.getState().eventData;
-    let oldOrigin       = data.startData.origin;
-    let startPosition   = data.startData.position;
-    let currentPosition = this.getPositionAtEvent(event);
-    let screenToModel   = this.props.getScreenToModel();
-
-    let startPnt        = screenToModel.transformPoint(Vector.create(startPosition.x, startPosition.y));
-    let currentPnt      = screenToModel.transformPoint(Vector.create(currentPosition.x, currentPosition.y));
+    let startPnt        = this.createVectorInModelCoordinates(data.startData.position);
+    let currentPnt      = this.createVectorInModelCoordinates(this.getPositionAtEvent(event));
     let moveVec         = currentPnt.subtract(startPnt);
 
-    let org = Vector.create(oldOrigin.x, oldOrigin.y).subtract(moveVec);
+    let org = this.createVectorFromObj(data.startData.origin).subtract(moveVec);
     this.props.actions.setOrigin(org.asObj());
   };
 
