@@ -5,7 +5,7 @@ export let setEventData = (type, position, otherData = {}) => {
 };
 
 export let resetEventData = () => {
-  return { type: ActionTypes.RESET_EVENT_DATA, value: {type: 'none', startData: null} };
+  return { type: ActionTypes.RESET_EVENT_DATA };
 };
 
 export let setZoomFactor = (zoomFactor) => {
@@ -13,7 +13,7 @@ export let setZoomFactor = (zoomFactor) => {
 };
 
 export let resetZoomFactor = () => {
-  return { type: ActionTypes.RESET_ZOOM_FACTOR, value: 100 };
+  return { type: ActionTypes.RESET_ZOOM_FACTOR };
 };
 
 export let setUpVector = (upVector) => {
@@ -21,7 +21,7 @@ export let setUpVector = (upVector) => {
 };
 
 export let resetUpVector = () => {
-  return { type: ActionTypes.RESET_UP_VECTOR, value: {x:0, y: 1} };
+  return { type: ActionTypes.RESET_UP_VECTOR };
 };
 
 export let setOrigin = (origin) => {
@@ -29,7 +29,7 @@ export let setOrigin = (origin) => {
 };
 
 export let resetOrigin = () => {
-  return { type: ActionTypes.RESET_ORIGIN, value: {x: 0, y: 0} };
+  return { type: ActionTypes.RESET_ORIGIN };
 };
 
 export let setCanvasDimensions = (width, height) => {
