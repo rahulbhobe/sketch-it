@@ -190,7 +190,7 @@ class CanvasEvents extends React.Component {
 
   cancelRotate () {
     let data = store.getState().eventData;
-    this.props.actions.setRotationAngle(data.startData.angle);
+    this.props.actions.setUpVector(data.startData.upVector);
   };
 
   handlePan (event) {
