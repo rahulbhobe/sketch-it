@@ -50,15 +50,17 @@ class Canvas extends React.Component {
   }
 
   render () {
-    return (<div id="canvas">
-              <svg id="svg" ref='svg'>
-                <g transform={this.getModelToScreenAsString()} >
-                  <line x1="0" y1="0" x2="200" y2="200" stroke="red" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-                  <circle cx="50" cy="50" r="40" stroke="black" strokeWidth="2" vectorEffect="non-scaling-stroke" fill="red" />
-                </g>
-              </svg>
-              <CanvasEvents getSvg={this.getSvg} getScreenToModel={this.getScreenToModel} />
-            </div>);
+    return (
+      <div id="canvas">
+        <svg id="svg" ref='svg'>
+          <g transform={this.getModelToScreenAsString()} >
+            <line x1="0" y1="0" x2="200" y2="200" stroke="red" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+            <circle cx="50" cy="50" r="40" stroke="black" strokeWidth="2" vectorEffect="non-scaling-stroke" fill="red" />
+          </g>
+        </svg>
+        <CanvasEvents getSvg={this.getSvg} getScreenToModel={this.getScreenToModel} />
+      </div>
+    );
   };
 };
 
