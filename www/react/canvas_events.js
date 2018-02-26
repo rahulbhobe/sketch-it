@@ -18,6 +18,7 @@ class CanvasEvents extends React.Component {
     this.onMouseWheelDoc = this.onMouseWheelDoc.bind(this);
     this.onResize = this.onResize.bind(this);
     this.resetEventDataDebounce = debounce(this.resetEventDataDebounce.bind(this), 200);
+    this.onMouseDownDebounce = debounce(this.onMouseDownDebounce.bind(this), 200);
   };
 
   getSvgRect () {
@@ -68,7 +69,7 @@ class CanvasEvents extends React.Component {
     return false;
   };
 
-  onMouseDown (event) {
+  onMouseDownDebounce (event) {
     let dataType = 'none';
     let data     = {};
 
@@ -81,6 +82,10 @@ class CanvasEvents extends React.Component {
     }
 
     this.props.actions.setEventData(dataType, this.getPositionAtEvent(event), data);
+  };
+
+  onMouseDown (event) {
+    this.onMouseDownDebounce(event);
   };
 
   onMouseMove (event) {
@@ -99,10 +104,12 @@ class CanvasEvents extends React.Component {
     } else if (data.type === 'rotate') {
       this.handleRotate(event);
     }
+    this.onMouseDownDebounce.clear();
     this.props.actions.resetEventData();
   };
 
   onMouseLeave () {
+    this.onMouseDownDebounce.clear();
     this.props.actions.resetEventData();
   };
 
