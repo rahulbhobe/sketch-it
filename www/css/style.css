@@ -45,7 +45,7 @@ html, body {
   height: 100%;
 }
 
-#side-view {
+#side-bar {
   grid-area: sidebar;
   background: #a3a3a3;
   border: 2px solid black;

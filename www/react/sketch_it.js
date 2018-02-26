@@ -1,5 +1,6 @@
 import React from 'react';
 import Canvas from './canvas';
+import SideBar from './side_bar';
 
 let HeaderView = () => (
   <div id="header">
@@ -13,15 +14,11 @@ let FooterView = () => (
   </div>
 );
 
-let SideView = () => (
-  <div id="side-view" />
-);
-
 let SketchIt = () => (
   <div id="container">
     <HeaderView />
     <Canvas />
-    <SideView />
+    <SideBar />
     <FooterView />
   </div>
 );
