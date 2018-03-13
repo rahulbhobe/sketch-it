@@ -98,13 +98,18 @@ class CanvasEvents extends React.Component {
   };
 
   onMouseUp (event) {
+    this.onMouseDownDebounce.clear();
+
     let data     = store.getState().eventData;
     if (data.type === 'pan') {
       this.handlePan(event);
     } else if (data.type === 'rotate') {
       this.handleRotate(event);
+    } else {
+      this.handleEditorClick(event);
+      return;
     }
-    this.onMouseDownDebounce.clear();
+
     this.props.actions.resetEventData();
   };
 
@@ -152,7 +157,6 @@ class CanvasEvents extends React.Component {
   }
 
   onResize (e) {
-    this.props.actions.setEventData('resize', {x: -1, y: -1}, {canvasDimensions: this.props.canvasDimensions});
     this.resetEventDataDebounce();
     this.setCanvasDimensions();
   };
@@ -208,6 +212,14 @@ class CanvasEvents extends React.Component {
 
     let org = this.createVectorFromObj(data.startData.origin).subtract(moveVec);
     this.props.actions.setOrigin(org.asObj());
+  };
+
+  handleEditorClick (event) {
+    let dataType = 'editor';
+    let data     = {};
+
+    data.location = this.createVectorInModelCoordinates(this.getPositionAtEvent(event)).asObj();
+    this.props.actions.setEventData(dataType, this.getPositionAtEvent(event), data);
   };
 
   cancelPan () {
