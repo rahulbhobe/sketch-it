@@ -177,9 +177,7 @@ class CanvasEvents extends React.Component {
       this.cancelRotate();
     }
     this.props.actions.resetEventData();
-    let editor = this.props.editor;
-    if (!editor) return;
-    editor.finishEditor();
+    this.finishEditor();
   };
 
   createVectorFromObj (vecObj) {
@@ -220,8 +218,17 @@ class CanvasEvents extends React.Component {
   handleEditorClick (event) {
     let editor = this.props.editor;
     if (!editor) return;
+
     let point     = this.createVectorInModelCoordinates(this.getPositionAtEvent(event)).asObj();
     editor.proccessNewPoint(point);
+  };
+
+  finishEditor () {
+    let editor = this.props.editor;
+    if (!editor) return;
+
+    editor.finishEditor();
+    this.props.actions.resetEditor();
   };
 
   cancelPan () {
@@ -231,7 +238,7 @@ class CanvasEvents extends React.Component {
 
   render() {
     return null;
-  }
+  };
 };
 
 let mapStateToProps = (state, ownProps) => {
