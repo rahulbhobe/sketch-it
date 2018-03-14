@@ -1,5 +1,21 @@
 import * as ActionTypes from './action_types';
 
+export let addDocumentElements = (element) => {
+  return { type: ActionTypes.ADD_DOCUMENT_ELEMENTS, value: element };
+};
+
+export let resetDocumentElements = () => {
+  return { type: ActionTypes.RESET_DOCUMENT_ELEMENTS };
+};
+
+export let addTemporaryElements = (element) => {
+  return { type: ActionTypes.SET_TEMPORARY_ELEMENTS, value: element };
+};
+
+export let resetTemporaryElements = () => {
+  return { type: ActionTypes.RESET_TEMPORARY_ELEMENTS };
+};
+
 export let setEventData = (type, position, otherData = {}) => {
   return { type: ActionTypes.SET_EVENT_DATA, value: {type, startData: Object.assign(otherData, {position}) } };
 };

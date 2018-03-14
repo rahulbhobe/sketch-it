@@ -1,6 +1,26 @@
 import {combineReducers} from 'redux';
 import * as ActionTypes from './action_types';
 
+let documentElementsReducer = (state, action) => {
+  let init = [];
+  if (action.type === ActionTypes.ADD_DOCUMENT_ELEMENTS) {
+    return state.concat([action.value]);
+  } else if (action.type === ActionTypes.RESET_DOCUMENT_ELEMENTS) {
+    return init;
+  }
+  return state || init;
+};
+
+let temporaryElementsReducer = (state, action) => {
+  let init = [];
+  if (action.type === ActionTypes.SET_TEMPORARY_ELEMENTS) {
+    return action.value;
+  } else if (action.type === ActionTypes.RESET_TEMPORARY_ELEMENTS) {
+    return init;
+  }
+  return state || init;
+};
+
 let eventDataReducer = (state, action) => {
   let init = {type: 'none', startData: null};
   if (action.type === ActionTypes.SET_EVENT_DATA) {
@@ -60,6 +80,8 @@ let canvasDimensionsReducer = (state, action) => {
 };
 
 let reducers = combineReducers({
+  documentElements: documentElementsReducer,
+  temporaryElements: temporaryElementsReducer,
   eventData: eventDataReducer,
   editor: editorReducer,
   zoomFactor: zoomFactorReducer,

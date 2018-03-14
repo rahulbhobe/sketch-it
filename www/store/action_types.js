@@ -1,3 +1,7 @@
+export const ADD_DOCUMENT_ELEMENTS              = 'ADD_DOCUMENT_ELEMENTS';
+export const RESET_DOCUMENT_ELEMENTS            = 'RESET_DOCUMENT_ELEMENTS';
+export const SET_TEMPORARY_ELEMENTS             = 'SET_TEMPORARY_ELEMENTS';
+export const RESET_TEMPORARY_ELEMENTS           = 'RESET_TEMPORARY_ELEMENTS';
 export const SET_EVENT_DATA                     = 'SET_EVENT_DATA';
 export const RESET_EVENT_DATA                   = 'RESET_EVENT_DATA';
 export const SET_EDITOR                         = 'SET_EDITOR';
