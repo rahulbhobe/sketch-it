@@ -1,10 +1,8 @@
 import React from 'react';
-import Editor from './editor';
 
 let Button = (props) => (
   <div>
     {props.text}
-    <Editor text={props.text}/>
   </div>
 );
 

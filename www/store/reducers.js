@@ -11,11 +11,11 @@ let eventDataReducer = (state, action) => {
   return state || init;
 };
 
-let editorDataReducer = (state, action) => {
-  let init = [];
-  if (action.type === ActionTypes.ADD_EDITOR_DATA) {
-    return state.concat([action.value]);
-  } else if (action.type === ActionTypes.RESET_EDITOR_DATA) {
+let editorReducer = (state, action) => {
+  let init = null;
+  if (action.type === ActionTypes.SET_EDITOR) {
+    return action.value;
+  } else if (action.type === ActionTypes.RESET_EDITOR) {
     return init;
   }
   return state || init;
@@ -61,7 +61,7 @@ let canvasDimensionsReducer = (state, action) => {
 
 let reducers = combineReducers({
   eventData: eventDataReducer,
-  editorData: editorDataReducer,
+  editor: editorReducer,
   zoomFactor: zoomFactorReducer,
   upVector: upVectorReducer,
   origin: originReducer,

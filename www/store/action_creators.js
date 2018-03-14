@@ -8,12 +8,12 @@ export let resetEventData = () => {
   return { type: ActionTypes.RESET_EVENT_DATA };
 };
 
-export let addEditorData = (data) => {
-  return { type: ActionTypes.ADD_EDITOR_DATA, value: data };
+export let setEditor = (editor) => {
+  return { type: ActionTypes.SET_EDITOR, value: editor };
 };
 
-export let resetEditorData = () => {
-  return { type: ActionTypes.RESET_EDITOR_DATA };
+export let resetEditor = () => {
+  return { type: ActionTypes.RESET_EDITOR };
 };
 
 export let setZoomFactor = (zoomFactor) => {
