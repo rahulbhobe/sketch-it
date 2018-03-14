@@ -1,11 +1,21 @@
 import {combineReducers} from 'redux';
 import * as ActionTypes from './action_types';
 
-let setEventDataReducer = (state, action) => {
+let eventDataReducer = (state, action) => {
   let init = {type: 'none', startData: null};
   if (action.type === ActionTypes.SET_EVENT_DATA) {
     return action.value;
   } else if (action.type === ActionTypes.RESET_EVENT_DATA) {
+    return init;
+  }
+  return state || init;
+};
+
+let editorDataReducer = (state, action) => {
+  let init = [];
+  if (action.type === ActionTypes.ADD_EDITOR_DATA) {
+    return state.concat([action.value]);
+  } else if (action.type === ActionTypes.RESET_EDITOR_DATA) {
     return init;
   }
   return state || init;
@@ -50,7 +60,8 @@ let canvasDimensionsReducer = (state, action) => {
 };
 
 let reducers = combineReducers({
-  eventData: setEventDataReducer,
+  eventData: eventDataReducer,
+  editorData: editorDataReducer,
   zoomFactor: zoomFactorReducer,
   upVector: upVectorReducer,
   origin: originReducer,

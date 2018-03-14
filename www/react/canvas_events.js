@@ -177,6 +177,7 @@ class CanvasEvents extends React.Component {
       this.cancelRotate();
     }
     this.props.actions.resetEventData();
+    this.props.actions.resetEditorData();
   };
 
   createVectorFromObj (vecObj) {
@@ -215,11 +216,9 @@ class CanvasEvents extends React.Component {
   };
 
   handleEditorClick (event) {
-    let dataType = 'editor';
     let data     = {};
-
     data.location = this.createVectorInModelCoordinates(this.getPositionAtEvent(event)).asObj();
-    this.props.actions.setEventData(dataType, this.getPositionAtEvent(event), data);
+    this.props.actions.addEditorData(data);
   };
 
   cancelPan () {
