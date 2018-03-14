@@ -1,15 +1,12 @@
 import React from 'react';
-
-let Button = (props) => (
-  <div>
-    {props.text}
-  </div>
-);
+import EditorButton from './editor_button'
+import WallsEditor from '../editor/walls_editor';
+import FloorsEditor from '../editor/floors_editor';
 
 let SideBar = () => (
   <div id="side-bar">
-    <Button text="Wall" />
-    <Button text="Floor" />
+    <EditorButton text="Wall"  editor={WallsEditor} />
+    <EditorButton text="Floor" editor={FloorsEditor} />
   </div>
 );
 
