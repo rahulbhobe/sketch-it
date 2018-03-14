@@ -8,8 +8,8 @@
     "postinstall": "npm run build",
     "build": "npm run client-build && npm run server-build",
     "watch": "npm run client-watch &  npm run server-watch",
-    "client-build": "browserify            -g browserify-css -t [ babelify --presets [ react env ] --plugins [ transform-class-properties transform-object-rest-spread ] ] www/react/* www/store/* www/utils/* www/mathutils/* -o www/generated/sketch_it_bundle.js",
-    "client-watch": "watchify   --debug -v -g browserify-css -t [ babelify --presets [ react env ] --plugins [ transform-class-properties transform-object-rest-spread ] ] www/react/* www/store/* www/utils/* www/mathutils/* -o www/generated/sketch_it_bundle.js",
+    "client-build": "browserify            -g browserify-css -t [ babelify --presets [ react env ] --plugins [ transform-class-properties transform-object-rest-spread ] ] `find www/react/* www/store/* www/utils/* www/mathutils/*` -o www/generated/sketch_it_bundle.js",
+    "client-watch": "watchify   --debug -v -g browserify-css -t [ babelify --presets [ react env ] --plugins [ transform-class-properties transform-object-rest-spread ] ] `find www/react/* www/store/* www/utils/* www/mathutils/*` -o www/generated/sketch_it_bundle.js",
     "server-build": "babel         --presets env --plugins transform-class-properties server/src --out-dir server/generated",
     "server-watch": "babel --watch --presets env --plugins transform-class-properties server/src --out-dir server/generated"
   },
