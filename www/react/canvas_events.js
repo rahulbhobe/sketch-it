@@ -216,18 +216,16 @@ class CanvasEvents extends React.Component {
   };
 
   handleEditorClick (event) {
-    let editor = this.props.editor;
-    if (!editor) return;
-
+    let {editor} = this.props;
+    if (editor==='none') return;
     let point     = this.createVectorInModelCoordinates(this.getPositionAtEvent(event)).asObj();
-    editor.proccessNewPoint(point);
+    this.props.actions.addEditorPoints([{type: 'point', point}]);
   };
 
   finishEditor () {
-    let editor = this.props.editor;
+    let {editor} = this.props;
     if (!editor) return;
-
-    editor.finishEditor();
+    this.props.actions.addEditorPoints([{type: 'done'}]);
     this.props.actions.resetEditor();
   };
 

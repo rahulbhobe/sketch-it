@@ -1,27 +1,11 @@
 import * as ActionTypes from './action_types';
 
-export let addDocumentElements = (element) => {
-  return { type: ActionTypes.ADD_DOCUMENT_ELEMENTS, value: element };
+export let addDocumentElements = (elements) => {
+  return { type: ActionTypes.ADD_DOCUMENT_ELEMENTS, value: elements };
 };
 
 export let resetDocumentElements = () => {
   return { type: ActionTypes.RESET_DOCUMENT_ELEMENTS };
-};
-
-export let addTemporaryElements = (element) => {
-  return { type: ActionTypes.SET_TEMPORARY_ELEMENTS, value: element };
-};
-
-export let resetTemporaryElements = () => {
-  return { type: ActionTypes.RESET_TEMPORARY_ELEMENTS };
-};
-
-export let setEventData = (type, position, otherData = {}) => {
-  return { type: ActionTypes.SET_EVENT_DATA, value: {type, startData: Object.assign(otherData, {position}) } };
-};
-
-export let resetEventData = () => {
-  return { type: ActionTypes.RESET_EVENT_DATA };
 };
 
 export let setEditor = (editor) => {
@@ -30,6 +14,22 @@ export let setEditor = (editor) => {
 
 export let resetEditor = () => {
   return { type: ActionTypes.RESET_EDITOR };
+};
+
+export let addEditorPoints = (points) => {
+  return { type: ActionTypes.ADD_EDITOR_POINTS, value: points };
+};
+
+export let resetEditorPoints = () => {
+  return { type: ActionTypes.RESET_EDITOR_POINTS };
+};
+
+export let setEventData = (type, position, otherData = {}) => {
+  return { type: ActionTypes.SET_EVENT_DATA, value: {type, startData: Object.assign(otherData, {position}) } };
+};
+
+export let resetEventData = () => {
+  return { type: ActionTypes.RESET_EVENT_DATA };
 };
 
 export let setZoomFactor = (zoomFactor) => {

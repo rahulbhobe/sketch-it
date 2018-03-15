@@ -4,18 +4,28 @@ import * as ActionTypes from './action_types';
 let documentElementsReducer = (state, action) => {
   let init = [];
   if (action.type === ActionTypes.ADD_DOCUMENT_ELEMENTS) {
-    return state.concat([action.value]);
+    return state.concat(action.value);
   } else if (action.type === ActionTypes.RESET_DOCUMENT_ELEMENTS) {
     return init;
   }
   return state || init;
 };
 
-let temporaryElementsReducer = (state, action) => {
-  let init = [];
-  if (action.type === ActionTypes.SET_TEMPORARY_ELEMENTS) {
+let editorReducer = (state, action) => {
+  let init = 'none';
+  if (action.type === ActionTypes.SET_EDITOR) {
     return action.value;
-  } else if (action.type === ActionTypes.RESET_TEMPORARY_ELEMENTS) {
+  } else if (action.type === ActionTypes.RESET_EDITOR) {
+    return init;
+  }
+  return state || init;
+};
+
+let editorPointsReducer = (state, action) => {
+  let init = [];
+  if (action.type === ActionTypes.ADD_EDITOR_POINTS) {
+    return state.concat(action.value);
+  } else if (action.type === ActionTypes.RESET_EDITOR_POINTS) {
     return init;
   }
   return state || init;
@@ -26,16 +36,6 @@ let eventDataReducer = (state, action) => {
   if (action.type === ActionTypes.SET_EVENT_DATA) {
     return action.value;
   } else if (action.type === ActionTypes.RESET_EVENT_DATA) {
-    return init;
-  }
-  return state || init;
-};
-
-let editorReducer = (state, action) => {
-  let init = null;
-  if (action.type === ActionTypes.SET_EDITOR) {
-    return action.value;
-  } else if (action.type === ActionTypes.RESET_EDITOR) {
     return init;
   }
   return state || init;
@@ -81,9 +81,9 @@ let canvasDimensionsReducer = (state, action) => {
 
 let reducers = combineReducers({
   documentElements: documentElementsReducer,
-  temporaryElements: temporaryElementsReducer,
-  eventData: eventDataReducer,
   editor: editorReducer,
+  editorPoints: editorPointsReducer,
+  eventData: eventDataReducer,
   zoomFactor: zoomFactorReducer,
   upVector: upVectorReducer,
   origin: originReducer,

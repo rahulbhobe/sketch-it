@@ -4,17 +4,17 @@ import ReduxUtils from '../utils/redux_utils';
 class EditorButton extends React.Component {
   constructor (props) {
     super(props);
-    this.startEditor = this.startEditor.bind(this);
+    this.onClick = this.onClick.bind(this);
   };
 
-  startEditor () {
-    let EditorClass = this.props.editor;
-    this.props.actions.setEditor(new EditorClass());
+  onClick () {
+    let {type} = this.props;
+    this.props.actions.setEditor(type);
   };
 
   render () {
     return (
-      <div onClick={this.startEditor}>
+      <div onClick={this.onClick}>
         {this.props.text}
       </div>
     );
