@@ -11,6 +11,16 @@ let documentElementsReducer = (state, action) => {
   return state || init;
 };
 
+let temporaryElementsReducer = (state, action) => {
+  let init = [];
+  if (action.type === ActionTypes.SET_TEMPORARY_ELEMENTS) {
+    return action.value;
+  } else if (action.type === ActionTypes.RESET_TEMPORARY_ELEMENTS) {
+    return init;
+  }
+  return state || init;
+};
+
 let editorReducer = (state, action) => {
   let init = 'none';
   if (action.type === ActionTypes.SET_EDITOR) {
@@ -26,6 +36,16 @@ let editorPointsReducer = (state, action) => {
   if (action.type === ActionTypes.ADD_EDITOR_POINTS) {
     return state.concat(action.value);
   } else if (action.type === ActionTypes.RESET_EDITOR_POINTS) {
+    return init;
+  }
+  return state || init;
+};
+
+let editorEventReducer = (state, action) => {
+  let init = null;
+  if (action.type === ActionTypes.SET_EDITOR_EVENT) {
+    return action.value;
+  } else if (action.type === ActionTypes.RESET_EDITOR_EVENT) {
     return init;
   }
   return state || init;
@@ -81,8 +101,10 @@ let canvasDimensionsReducer = (state, action) => {
 
 let reducers = combineReducers({
   documentElements: documentElementsReducer,
+  temporaryElements: temporaryElementsReducer,
   editor: editorReducer,
   editorPoints: editorPointsReducer,
+  editorEvent: editorEventReducer,
   eventData: eventDataReducer,
   zoomFactor: zoomFactorReducer,
   upVector: upVectorReducer,

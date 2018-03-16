@@ -8,6 +8,14 @@ export let resetDocumentElements = () => {
   return { type: ActionTypes.RESET_DOCUMENT_ELEMENTS };
 };
 
+export let setTemporaryElements = (elements) => {
+  return { type: ActionTypes.SET_TEMPORARY_ELEMENTS, value: elements };
+};
+
+export let resetTemporaryElements = () => {
+  return { type: ActionTypes.RESET_TEMPORARY_ELEMENTS };
+};
+
 export let setEditor = (editor) => {
   return { type: ActionTypes.SET_EDITOR, value: editor };
 };
@@ -22,6 +30,14 @@ export let addEditorPoints = (points) => {
 
 export let resetEditorPoints = () => {
   return { type: ActionTypes.RESET_EDITOR_POINTS };
+};
+
+export let setEditorEvent = (data) => {
+  return { type: ActionTypes.SET_EDITOR_EVENT, value: data };
+};
+
+export let resetEditorEvent = () => {
+  return { type: ActionTypes.RESET_EDITOR_EVENT };
 };
 
 export let setEventData = (type, position, otherData = {}) => {
