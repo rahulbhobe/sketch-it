@@ -9,9 +9,9 @@ import ElementUtils from '../utils/element_utils';
 class SideBar extends React.Component {
   getEditorComponent () {
     if (this.props.editor === 'walls')
-      return (<Editor generateElems={ElementUtils.generateWallsFromPoints}/>);
+      return (<Editor key='walls_editor' generateElems={ElementUtils.generateWallsFromPoints}/>);
     if (this.props.editor === 'floors')
-      return (<Editor generateElems={ElementUtils.generateFloorsFromPoints}/>);
+      return (<Editor key='floors_editor' generateElems={ElementUtils.generateFloorsFromPoints}/>);
     return null;
   };
 
