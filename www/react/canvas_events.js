@@ -94,6 +94,9 @@ class CanvasEvents extends React.Component {
       this.handlePan(event);
     } else if (data.type === 'rotate') {
       this.handleRotate(event);
+    } else {
+      this.handleEditorEvent(event, 'move');
+      return;
     }
   };
 
@@ -106,7 +109,7 @@ class CanvasEvents extends React.Component {
     } else if (data.type === 'rotate') {
       this.handleRotate(event);
     } else {
-      this.handleEditorClick(event);
+      this.handleEditorEvent(event, 'click');
       return;
     }
 
@@ -215,17 +218,17 @@ class CanvasEvents extends React.Component {
     this.props.actions.setOrigin(org.asObj());
   };
 
-  handleEditorClick (event) {
+  handleEditorEvent (event, type) {
     let {editor} = this.props;
     if (editor==='none') return;
     let point     = this.createVectorInModelCoordinates(this.getPositionAtEvent(event)).asObj();
-    this.props.actions.addEditorPoints([{type: 'point', point}]);
+    this.props.actions.setEditorEvent({type, point});
   };
 
   finishEditor () {
     let {editor} = this.props;
     if (!editor) return;
-    this.props.actions.addEditorPoints([{type: 'done'}]);
+    this.props.actions.setEditorEvent({type: 'done'});
     this.props.actions.resetEditor();
   };
 
