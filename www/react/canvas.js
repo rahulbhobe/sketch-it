@@ -52,7 +52,14 @@ class Canvas extends React.Component {
 
   renderElements (temp) {
     let elementsToRender = temp ? this.props.temporaryElements : this.props.documentElements;
-    return ArrayUtils.range(elementsToRender.length).map(idx => elementsToRender[idx].render(temp, idx));
+    return ArrayUtils.range(elementsToRender.length).map(idx => {
+      let prefix =  temp ? 'temp' : 'doc';
+      return (
+        <g key={prefix + idx}>
+          {elementsToRender[idx].render(temp)}
+        </g>
+      );
+    });
   };
 
   render () {
