@@ -1,16 +1,17 @@
 import React from 'react';
 import ReduxUtils from '../utils/redux_utils';
 import EditorButton from './editor_button';
-import WallsEditor from './walls_editor';
+import Editor from './editor';
 import FloorsEditor from './floors_editor';
+import ElementUtils from '../utils/element_utils';
 
 
 class SideBar extends React.Component {
   getEditorComponent () {
     if (this.props.editor === 'walls')
-      return (<WallsEditor />);
+      return (<Editor generateElems={ElementUtils.generateWallsFromPoints}/>);
     if (this.props.editor === 'floors')
-      return (<FloorsEditor />);
+      return (<Editor generateElems={ElementUtils.generateFloorsFromPoints}/>);
     return null;
   };
 
