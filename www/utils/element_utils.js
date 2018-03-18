@@ -20,8 +20,13 @@ class ElementUtils {
     let length = points.length;
     if (length < 2) return [];
 
-    if ((length === 2) && temp)
-      return ElementUtils.generateWallsFromPoints(points, temp);
+    if (length < 3)
+    {
+      if (temp)
+        return ElementUtils.generateWallsFromPoints(points, temp);
+      else
+        return [];
+    }
 
     let first = points[0];
     return [new Floor(ElementUtils.getCurvesFromPoints(points.concat([first])))];
