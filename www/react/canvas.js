@@ -1,6 +1,7 @@
 import React from 'react';
 import {Vector, MatrixTransformations} from '../mathutils/gl_matrix_wrapper';
 import ReduxUtils from '../utils/redux_utils';
+import ArrayUtils from '../utils/array_utils';
 import CanvasEvents from './canvas_events';
 
 class Canvas extends React.Component {
@@ -43,19 +44,24 @@ class Canvas extends React.Component {
   setCanvasDimensions () {
     let {width, height}  = this.getSvg().getBoundingClientRect();
     this.props.actions.setCanvasDimensions(width, height);
-  }
+  };
 
   componentDidMount () {
     this.setCanvasDimensions();
-  }
+  };
+
+  renderElements (temp) {
+    let elementsToRender = temp ? this.props.temporaryElements : this.props.documentElements;
+    return ArrayUtils.range(elementsToRender.length).map(idx => elementsToRender[idx].render(temp, idx));
+  };
 
   render () {
     return (
       <div id="canvas">
         <svg id="svg" ref='svg'>
           <g transform={this.getModelToScreenAsString()} >
-            <line x1="0" y1="0" x2="200" y2="200" stroke="red" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-            <circle cx="50" cy="50" r="40" stroke="black" strokeWidth="2" vectorEffect="non-scaling-stroke" fill="red" />
+            {this.renderElements()}
+            {this.renderElements(true)}
           </g>
         </svg>
         <CanvasEvents getSvg={this.getSvg} getScreenToModel={this.getScreenToModel} />
@@ -69,7 +75,9 @@ let mapStateToProps = (state, ownProps) => {
     zoomFactor: state.zoomFactor,
     upVector: state.upVector,
     origin: state.origin,
-    dimensions: state.canvasDimensions
+    dimensions: state.canvasDimensions,
+    documentElements: state.documentElements,
+    temporaryElements: state.temporaryElements
   };
 };
 
