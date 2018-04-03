@@ -2,7 +2,6 @@ import React from 'react';
 import ReduxUtils from '../utils/redux_utils';
 import EditorButton from './editor_button';
 import Editor from './editor';
-import FloorsEditor from './floors_editor';
 import ElementUtils from '../utils/element_utils';
 
 
