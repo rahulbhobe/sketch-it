@@ -19,8 +19,8 @@ class SideBar extends React.Component {
     let editor = this.getEditorComponent();
     return (
       <div id='side-bar'>
-        <EditorButton text='Wall'  type='walls'  />
-        <EditorButton text='Floor' type='floors' />
+        <EditorButton type='walls'  />
+        <EditorButton type='floors' />
         {editor}
       </div>
     );

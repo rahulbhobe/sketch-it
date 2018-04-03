@@ -55,3 +55,20 @@ html, body {
   border: 2px solid black;
   border-left: none;
 }
+
+.editor-button {
+  border: 1px solid black;
+  margin: 3px;
+  border-radius: 3px;
+  box-shadow: 0 3px #777777;
+}
+
+.editor-button:hover {
+  background-color: #cbcbcb;
+}
+
+.editor-button-active, .editor-button:active {
+  background-color: #cbcbcb;
+  box-shadow: 0 1px #666666;
+  transform: translateY(1px);
+}

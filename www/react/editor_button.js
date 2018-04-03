@@ -1,5 +1,6 @@
 import React from 'react';
 import ReduxUtils from '../utils/redux_utils';
+import classNames from 'classnames';
 
 class EditorButton extends React.Component {
   constructor (props) {
@@ -13,12 +14,17 @@ class EditorButton extends React.Component {
   };
 
   render () {
+    let cls = classNames('editor-button', {'editor-button-active': this.props.active});
     return (
-      <div onClick={this.onClick}>
-        {this.props.text}
-      </div>
+      <img className={cls} onClick={this.onClick} src={'res/'+this.props.type+'.png'} />
     );
   };
 };
 
-export default ReduxUtils.connect(null, true)(EditorButton);
+let mapStateToProps = (state, ownProps) => {
+  return {
+    active: state.editor === ownProps.type,
+  };
+};
+
+export default ReduxUtils.connect(mapStateToProps, true)(EditorButton);
