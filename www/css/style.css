@@ -57,7 +57,7 @@ html, body {
 }
 
 .editor-button {
-  border: 1px solid black;
+  border: 1px solid #666666;
   margin: 3px;
   border-radius: 3px;
   box-shadow: 0 3px 0 2px #777777;
@@ -65,10 +65,12 @@ html, body {
 
 .editor-button:hover {
   background-color: #cbcbcb;
+  box-shadow: 0 0px 0 1px #666666;
+  transform: translateY(3px);
 }
 
-.editor-button-active, .editor-button:active {
+.editor-button-active, .editor-button:active, .editor-button:hover {
   background-color: #cbcbcb;
   box-shadow: 0 1px 0 1px #666666;
-  transform: translateY(1px);
+  transform: translateY(2px);
 }

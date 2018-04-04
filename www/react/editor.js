@@ -14,6 +14,7 @@ class Editor extends React.Component {
 
   componentWillUnmount () {
     this.editorReset();
+    this.props.actions.resetTemporaryElements();
   };
 
   editorReset () {

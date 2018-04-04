@@ -9,8 +9,14 @@ class EditorButton extends React.Component {
   };
 
   onClick () {
-    let {type} = this.props;
-    this.props.actions.setEditor(type);
+    let {type, active} = this.props;
+    if (active) {
+      this.props.actions.setEditorEvent({type: 'done'});
+      this.props.actions.resetEditor();
+    }
+    else {
+      this.props.actions.setEditor(type);
+    }
   };
 
   render () {
