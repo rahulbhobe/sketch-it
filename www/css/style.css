@@ -13,7 +13,7 @@ html, body {
 #container {
   display: grid;
   height: 100vh;
-  grid-template-columns: auto 300px;
+  grid-template-columns: auto 325px;
   --header-height: 50px;
   --footer-height: 30px;
   grid-template-rows: var(--header-height) auto var(--footer-height);
@@ -60,7 +60,7 @@ html, body {
   border: 1px solid black;
   margin: 3px;
   border-radius: 3px;
-  box-shadow: 0 3px #777777;
+  box-shadow: 0 3px 0 2px #777777;
 }
 
 .editor-button:hover {
@@ -69,6 +69,6 @@ html, body {
 
 .editor-button-active, .editor-button:active {
   background-color: #cbcbcb;
-  box-shadow: 0 1px #666666;
+  box-shadow: 0 1px 0 1px #666666;
   transform: translateY(1px);
 }
