@@ -6,27 +6,34 @@ import ElementUtils from '../utils/element_utils';
 
 
 class SideBar extends React.Component {
-  getEditorComponent () {
-    if (this.props.editor === 'wall')
-      return (<Editor key='wall_editor' generateElems={ElementUtils.generateWallsFromPoints}/>);
-    if (this.props.editor === 'floor')
-      return (<Editor key='floor_editor' generateElems={ElementUtils.generateFloorsFromPoints}/>);
-    return null;
+
+  getEditorData () {
+    return [
+      { type: 'wall',       generateElems: ElementUtils.generateWallsFromPoints  },
+      { type: 'floor',      generateElems: ElementUtils.generateFloorsFromPoints },
+      { type: 'door',       generateElems: null },
+      { type: 'window',     generateElems: null },
+      { type: 'ceiling',    generateElems: null },
+      { type: 'roof',       generateElems: null },
+      { type: 'component',  generateElems: null },
+      { type: 'column',     generateElems: null }
+    ];
+  };
+
+  getActiveEditorComponent () {
+    let editorData = this.getEditorData().filter(data => data.type === this.props.editor);
+
+    if (editorData.length<1) return null;
+    if (!editorData[0].generateElems) return null;
+
+    return (<Editor key={'editor_class'+editorData[0].type} generateElems={editorData[0].generateElems}/>);
   };
 
   render () {
-    let editor = this.getEditorComponent();
     return (
       <div id='side-bar'>
-        <EditorButton type='wall'  />
-        <EditorButton type='floor' />
-        <EditorButton type='door' />
-        <EditorButton type='window' />
-        <EditorButton type='ceiling' />
-        <EditorButton type='roof' />
-        <EditorButton type='component' />
-        <EditorButton type='column' />
-        {editor}
+        { this.getEditorData().map(data => (<EditorButton key={'editor_button'+data.type} type={data.type}/>)) }
+        { this.getActiveEditorComponent() }
       </div>
     );
   };
