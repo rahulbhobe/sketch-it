@@ -11,7 +11,7 @@ class EditorButton extends React.Component {
   onClick () {
     let {type, active} = this.props;
     if (active) {
-      this.props.actions.setEditorEvent({type: 'done'});
+      this.props.actions.setEditorEvent({type: 'cancel'});
       this.props.actions.resetEditor();
     }
     else {
