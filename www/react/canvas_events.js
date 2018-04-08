@@ -25,12 +25,15 @@ class CanvasEvents extends React.Component {
     return this.props.getSvg().getBoundingClientRect();
   };
 
-  getPositionAtEvent (event) {
+  getPositionAtEvent (event, snap) {
     let boundingRect   = this.getSvgRect();
     let pos = {
       x: event.clientX - boundingRect.left,
       y: event.clientY - boundingRect.top
     };
+
+    if (!snap)
+      return pos;
 
     let svg         = this.props.getSvg();
     let hitTestRect = svg.createSVGRect();
@@ -104,7 +107,7 @@ class CanvasEvents extends React.Component {
       data.upVector = this.props.upVector;
     }
 
-    this.props.actions.setEventData(dataType, this.getPositionAtEvent(event), data);
+    this.props.actions.setEventData(dataType, this.getPositionAtEvent(event, false), data);
   };
 
   onMouseDown (event) {
@@ -166,7 +169,7 @@ class CanvasEvents extends React.Component {
     }
 
     if (zoomFactor !== this.props.zoomFactor) {
-      this.props.actions.setEventData(dataType, this.getPositionAtEvent(event), data);
+      this.props.actions.setEventData(dataType, this.getPositionAtEvent(event, false), data);
       this.props.actions.setZoomFactor(zoomFactor);
     }
     this.resetEventDataDebounce();
@@ -219,7 +222,7 @@ class CanvasEvents extends React.Component {
     let data            = store.getState().eventData;
     let midPoint        = this.createVectorInModelCoordinates({x: this.getSvgRect().width*0.5, y: this.getSvgRect().height*0.5});
     let startVec        = this.createVectorInModelCoordinates(data.startData.position).subtract(midPoint);
-    let currentVec      = this.createVectorInModelCoordinates(this.getPositionAtEvent(event)).subtract(midPoint);
+    let currentVec      = this.createVectorInModelCoordinates(this.getPositionAtEvent(event, false)).subtract(midPoint);
 
     let matrix          = Matrix.create().rotate(-1 * startVec.angleTo(currentVec));
     let upVector        = matrix.transformPoint(this.createVectorFromObj(data.startData.upVector));
@@ -234,7 +237,7 @@ class CanvasEvents extends React.Component {
   handlePan (event) {
     let data            = store.getState().eventData;
     let startPnt        = this.createVectorInModelCoordinates(data.startData.position);
-    let currentPnt      = this.createVectorInModelCoordinates(this.getPositionAtEvent(event));
+    let currentPnt      = this.createVectorInModelCoordinates(this.getPositionAtEvent(event, false));
     let moveVec         = currentPnt.subtract(startPnt);
 
     let org = this.createVectorFromObj(data.startData.origin).subtract(moveVec);
@@ -244,7 +247,7 @@ class CanvasEvents extends React.Component {
   handleEditorEvent (event, type) {
     let {editor} = this.props;
     if (editor==='none') return;
-    let point     = this.createVectorInModelCoordinates(this.getPositionAtEvent(event)).asObj();
+    let point     = this.createVectorInModelCoordinates(this.getPositionAtEvent(event, true)).asObj();
     this.props.actions.setEditorEvent({type, point});
   };
 
