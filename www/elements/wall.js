@@ -8,10 +8,10 @@ class Wall extends Element {
     this.curve = curve;
   };
 
-  render (temp) {
+  render (temp, snap) {
     return (
       <g>
-        {this.curve.render(temp)}
+        {this.curve.render(temp, snap)}
       </g>
     );
   };

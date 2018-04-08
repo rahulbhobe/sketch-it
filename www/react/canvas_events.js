@@ -27,10 +27,33 @@ class CanvasEvents extends React.Component {
 
   getPositionAtEvent (event) {
     let boundingRect   = this.getSvgRect();
-    return {
+    let pos = {
       x: event.clientX - boundingRect.left,
       y: event.clientY - boundingRect.top
     };
+
+    let svg         = this.props.getSvg();
+    let hitTestRect = svg.createSVGRect();
+
+    let snapSize = 5;
+    hitTestRect.x = pos.x - snapSize;
+    hitTestRect.y = pos.y - snapSize;
+    hitTestRect.width  = snapSize*2;
+    hitTestRect.height = snapSize*2;
+
+    let nodes = Array.from(svg.getIntersectionList(hitTestRect, null))
+                     .filter(elem => elem.tagName === 'circle');
+
+    if (nodes.length === 0)
+      return pos;
+
+    let posVec = Vector.create(pos.x, pos.y)
+    let modelToScreen = this.props.getScreenToModel().invert();
+    let points = nodes.map(elem => JSON.parse(elem.getAttribute('data-snap')))
+                      .map(obj  => modelToScreen.transformPoint(Vector.create(obj.x, obj.y)))
+                      .sort((pnt1, pnt2) => pnt1.distanceFrom(posVec) < pnt2.distanceFrom(posVec));
+
+    return points[0].asObj();
   };
 
   componentDidMount () {

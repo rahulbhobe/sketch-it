@@ -56,7 +56,7 @@ class Canvas extends React.Component {
       let prefix =  temp ? 'temp' : 'doc';
       return (
         <g key={prefix + idx}>
-          {elementsToRender[idx].render(temp)}
+          {elementsToRender[idx].render(temp, !temp || idx<elementsToRender.length-1)}
         </g>
       );
     });

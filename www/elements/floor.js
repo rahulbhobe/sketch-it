@@ -9,13 +9,13 @@ class Floor extends Element {
     this.curves = curves;
   };
 
-  render (temp) {
+  render (temp, snap) {
     let {curves} = this;
     return (
       <g> {
         ArrayUtils.range(curves.length).map(idx => (
           <g key={'curve_'+idx}>
-            {curves[idx].render(temp)}
+            {curves[idx].render(temp, snap || idx<curves.length-2)}
           </g>
         ))
       } </g>
