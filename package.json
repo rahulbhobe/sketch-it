@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server/generated/main.js",
     "postinstall": "npm run build",
+    "clean": "git clean -fxd",
     "build": "npm run client-build && npm run server-build",
     "watch": "npm run client-watch &  npm run server-watch",
     "debug": "npm run watch & nodemon",
