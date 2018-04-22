@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import favicon from 'serve-favicon';
+import shortid from 'shortid';
 
 let app =  express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -19,6 +20,11 @@ app.get('/*', (req, res) => {
     res.render('index');
     return;
   }
+});
+
+app.post('/create', (req, res) => {
+  let {data} = req.body;
+  res.send({fileId: shortid.generate()});
 });
 
 app.set('port', process.env.PORT || 3000);

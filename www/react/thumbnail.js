@@ -1,4 +1,5 @@
 import React from 'react';
+import RequestUtils from '../utils/request_utils';
 
 class Thumbnail extends React.Component {
   constructor (props) {
@@ -7,6 +8,8 @@ class Thumbnail extends React.Component {
   };
 
   onClick () {
+    RequestUtils.postRequest('/create', {data: null})
+                .then(({fileId}) => console.log(fileId));
   };
 
   render () {
