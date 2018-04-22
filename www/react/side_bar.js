@@ -1,6 +1,7 @@
 import React from 'react';
 import ReduxUtils from '../utils/redux_utils';
 import EditorButton from './editor_button';
+import Thumbnail from './thumbnail';
 import Editor from './editor';
 import ElementUtils from '../utils/element_utils';
 
@@ -32,8 +33,11 @@ class SideBar extends React.Component {
   render () {
     return (
       <div id='side-bar'>
-        { this.getEditorData().map(data => (<EditorButton key={'editor_button'+data.type} type={data.type}/>)) }
+        <div id='editors'>
+          { this.getEditorData().map(data => (<EditorButton key={'editor_button'+data.type} className='other' type={data.type}/>)) }
+        </div>
         { this.getActiveEditorComponent() }
+        <Thumbnail />
       </div>
     );
   };

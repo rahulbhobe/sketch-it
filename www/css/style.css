@@ -54,6 +54,20 @@ html, body {
   background: #a3a3a3;
   border: 2px solid black;
   border-left: none;
+  display: grid;
+  grid-template-rows: auto 200px;
+  grid-template-columns: auto;
+  grid-template-areas:
+    "editors"
+    "thumbnail";
+}
+
+#editors {
+  grid-area: editors;
+}
+
+#thumbnail {
+  grid-area: thumbnail;
 }
 
 .editor-button {
@@ -73,4 +87,27 @@ html, body {
   background-color: #cbcbcb;
   box-shadow: 0 1px 0 1px #666666;
   transform: translateY(2px);
+}
+
+.tn-button {
+  display: table;
+  font-size: 24px;
+  width: 100%;
+  height: 195px;
+  box-shadow: 0 4px 0 0px #666666;
+  cursor: pointer;
+  text-align: center;
+  color: #ffffff;
+  background-color: #3d9970;
+  border-radius: 10px;
+}
+
+.tn-button:active, .tn-button:hover {
+  box-shadow: 0 1px 0 0px #666666;
+  transform: translateY(3px);
+}
+
+.tn-button-span {
+  display: table-cell;
+  vertical-align: middle;
 }
