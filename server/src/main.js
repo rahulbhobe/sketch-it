@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import favicon from 'serve-favicon';
 import shortid from 'shortid';
+import ForgeUtils from './forge_utils';
 
 let app =  express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,3 +33,5 @@ app.set('port', process.env.PORT || 3000);
 let server = app.listen(app.get('port'), () => {
   console.log('Server listening on port ' + server.address().port);
 });
+
+ForgeUtils.init();
