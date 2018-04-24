@@ -3,7 +3,7 @@ import ForgeSDK from 'forge-apis';
 class ForgeUtils {
   static CLIENT_ID        = process.env.CLIENT_ID || '';
   static CLIENT_SECRET    = process.env.CLIENT_SECRET || '';
-  static AUTH_SCOPE       = ['data:write', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete'];
+  static AUTH_SCOPE       = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete'];
   static BUCKET_KEY       = 'sketchit_testing';
   static _oAuth2TwoLegged = null;
 
@@ -29,6 +29,16 @@ class ForgeUtils {
       return BucketsApi.createBucket({bucketKey, policyKey}, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
     }).then(obj => {
       return obj.body.bucketKey;
+    });
+  };
+
+  static createSignedResource (objectName) {
+    let ObjectsApi = new ForgeSDK.ObjectsApi();
+    let bucketKey = this.BUCKET_KEY;
+    return ObjectsApi.uploadObject(bucketKey, objectName, 0, '', {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials()).then(res => {
+      return ObjectsApi.createSignedResource(bucketKey, objectName, {}, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
+    }).then(({body}) => {
+      return body.signedUrl;
     });
   };
 };

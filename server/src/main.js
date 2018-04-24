@@ -25,7 +25,9 @@ app.get('/*', (req, res) => {
 
 app.post('/create', (req, res) => {
   let {data} = req.body;
-  res.send({fileId: shortid.generate()});
+  let fileId = shortid.generate();
+  ForgeUtils.createSignedResource(fileId + '.rvt');
+  res.send({fileId});
 });
 
 app.set('port', process.env.PORT || 3000);
