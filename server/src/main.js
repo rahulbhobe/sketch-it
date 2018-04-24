@@ -46,7 +46,7 @@ app.post('/create', (req, res) => {
     return ForgeUtils.postWorkitem(payLoad);
   }).then(id => {
     console.log(id);
-    return ForgeUtils.getWorkitemStatus(id);
+    return ForgeUtils.getWorkitemStatusLoop(id);
   }).then(status => {
     console.log(status);
   });

@@ -69,6 +69,18 @@ class ForgeUtils {
       return JSON.parse(body).status;
     });
   };
+
+  static getWorkitemStatusLoop (id) {
+    return this.getWorkitemStatus(id).then(status => {
+      if (status!=='pending'&&status!=='inprogress') {
+        return Promise.resolve(status);
+      }
+      let delay = ms => new Promise(r => setTimeout(r, ms));
+      return delay(5000).then(() => {
+        return this.getWorkitemStatusLoop(id);
+      });
+    });
+  };
 };
 
 export default ForgeUtils;
