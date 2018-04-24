@@ -26,7 +26,31 @@ app.get('/*', (req, res) => {
 app.post('/create', (req, res) => {
   let {data} = req.body;
   let fileId = shortid.generate();
-  ForgeUtils.createSignedResource(fileId + '.rvt');
+  ForgeUtils.createSignedResource(fileId + '.rvt').then(signedUrl => {
+    let data = {
+      walls: [{start: { x: -100, y: 100, z: 0}, end: {x: 100, y: 100, z: 0 } }],
+      floors: []
+    };
+    let payLoad = {
+      activityId: 'SketchItDemo.SketchItActivity+test',
+      arguments: {
+        sketchItInput: {
+          url: 'data:application/json,'+JSON.stringify(data)
+        },
+        result: {
+          'verb': 'put',
+          url: signedUrl
+        }
+      }
+    };
+    return ForgeUtils.postWorkitem(payLoad);
+  }).then(id => {
+    console.log(id);
+    return ForgeUtils.getWorkitemStatus(id);
+  }).then(status => {
+    console.log(status);
+  });
+
   res.send({fileId});
 });
 

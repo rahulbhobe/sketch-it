@@ -1,9 +1,13 @@
 import ForgeSDK from 'forge-apis';
+import request from 'request';
+import {promisify} from 'es6-promisify';
+
 
 class ForgeUtils {
+  static DAS_URL          = 'https://developer.api.autodesk.com/da/us-east/v3';
   static CLIENT_ID        = process.env.CLIENT_ID || '';
   static CLIENT_SECRET    = process.env.CLIENT_SECRET || '';
-  static AUTH_SCOPE       = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete'];
+  static AUTH_SCOPE       = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete', 'code:all'];
   static BUCKET_KEY       = 'sketchit_testing';
   static _oAuth2TwoLegged = null;
 
@@ -32,16 +36,39 @@ class ForgeUtils {
     });
   };
 
-  static createSignedResource (objectName) {
+  static createSignedResource (objectName, read) {
     let ObjectsApi = new ForgeSDK.ObjectsApi();
     let bucketKey = this.BUCKET_KEY;
     return ObjectsApi.uploadObject(bucketKey, objectName, 0, '', {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials()).then(res => {
-      return ObjectsApi.createSignedResource(bucketKey, objectName, {}, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
+      return ObjectsApi.createSignedResource(bucketKey, objectName, {}, read ? {} : {access: 'write'}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
     }).then(({body}) => {
       return body.signedUrl;
+    });
+  };
+
+  static postWorkitem(payload) {
+    return promisify(request.post)({
+        url: this.DAS_URL + '/workitems',
+        headers: {
+          'Authorization': 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
+        },
+        json: payload
+    }).then(({body}) => {
+      return body.id;
+    });
+  };
+
+  static getWorkitemStatus (id) {
+    return promisify(request)({
+      url: this.DAS_URL + '/workitems/' + id,
+      headers: {
+        'Authorization': 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
+      },
+      method: 'GET'
+    }).then(({body}) => {
+      return JSON.parse(body).status;
     });
   };
 };
 
 export default ForgeUtils;
-
