@@ -48,7 +48,7 @@ app.post('/create', (req, res) => {
     console.log(id);
     return ForgeUtils.getWorkitemStatusLoop(id);
   }).then(status => {
-    console.log(status);
+    return ForgeUtils.translate(fileId + '.rvt');
   });
 
   res.send({fileId});

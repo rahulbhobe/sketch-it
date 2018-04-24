@@ -1,5 +1,6 @@
 import ForgeSDK from 'forge-apis';
 import request from 'request';
+import base64 from 'base-64';
 import {promisify} from 'es6-promisify';
 
 
@@ -36,14 +37,21 @@ class ForgeUtils {
     });
   };
 
-  static createSignedResource (objectName, read) {
+  static createSignedResource (objectName) {
     let ObjectsApi = new ForgeSDK.ObjectsApi();
     let bucketKey = this.BUCKET_KEY;
     return ObjectsApi.uploadObject(bucketKey, objectName, 0, '', {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials()).then(res => {
-      return ObjectsApi.createSignedResource(bucketKey, objectName, {}, read ? {} : {access: 'write'}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
+      return ObjectsApi.createSignedResource(bucketKey, objectName, {}, {access: 'write'}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
     }).then(({body}) => {
       return body.signedUrl;
     });
+  };
+
+  static translate (objectName) {
+    let DerivativesApi = new ForgeSDK.DerivativesApi();
+    let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
+    let input = {urn};
+    return DerivativesApi.translate({input}, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
   };
 
   static postWorkitem(payload) {
