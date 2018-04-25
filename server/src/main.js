@@ -25,8 +25,8 @@ app.get('/*', (req, res) => {
 
 app.post('/create', (req, res) => {
   let {data} = req.body;
-  let fileId = shortid.generate();
-  ForgeUtils.createSignedResource(fileId + '.rvt').then(signedUrl => {
+  let fileId = shortid.generate() + '.rvt';
+  ForgeUtils.createSignedResource(fileId).then(signedUrl => {
     let data = {
       walls: [{start: { x: -100, y: 100, z: 0}, end: {x: 100, y: 100, z: 0 } }],
       floors: []
@@ -48,7 +48,14 @@ app.post('/create', (req, res) => {
     console.log(id);
     return ForgeUtils.getWorkitemStatusLoop(id);
   }).then(status => {
-    return ForgeUtils.translate(fileId + '.rvt');
+    console.log(status, '- generated ' + fileId);
+    return ForgeUtils.translate(fileId);
+  }).then(() => {
+    return ForgeUtils.getDerivativesLoop(fileId);
+  }).then(status => {
+    console.log(status, '- translated ' + fileId);
+  }).catch(err => {
+    console.log(err)
   });
 
   res.send({fileId});

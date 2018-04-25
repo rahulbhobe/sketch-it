@@ -51,7 +51,34 @@ class ForgeUtils {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
     let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
     let input = {urn};
-    return DerivativesApi.translate({input}, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
+    let output = {
+      formats: [
+        {
+          type: 'svf',
+          views: ['2d', '3d']
+        }
+      ]
+    };
+    return DerivativesApi.translate({input, output}, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
+  };
+
+  static getDerivatives (objectName) {
+    let DerivativesApi = new ForgeSDK.DerivativesApi();
+    let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
+    return DerivativesApi.getManifest(urn, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials())
+                         .then(({body}) => body.status);
+  };
+
+  static getDerivativesLoop (objectName) {
+    return this.getDerivatives(objectName).then(status => {
+      if (status!=='pending'&&status!=='inprogress') {
+        return Promise.resolve(status);
+      }
+      let delay = ms => new Promise(r => setTimeout(r, ms));
+      return delay(5000).then(() => {
+        return this.getDerivativesLoop(objectName);
+      });
+    });
   };
 
   static postWorkitem(payload) {
