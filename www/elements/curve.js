@@ -25,6 +25,13 @@ class Curve {
       </g>
     );
   };
+
+  export () {
+    let {start, end} = this;
+    start.z = 0.0;
+    end.z = 0.0;
+    return {start, end};
+  }
 };
 
 export default Curve;

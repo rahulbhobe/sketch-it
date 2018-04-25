@@ -21,6 +21,13 @@ class Floor extends Element {
       } </g>
     );
   };
+
+  export () {
+    return this.curves.map(({start}) => {
+      start.z = 0.0;
+      return start;
+    });
+  };
 };
 
 export default Floor;

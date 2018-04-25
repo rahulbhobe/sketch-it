@@ -15,6 +15,10 @@ class Wall extends Element {
       </g>
     );
   };
+
+  export () {
+    return this.curve.export();
+  };
 };
 
 export default Wall;
