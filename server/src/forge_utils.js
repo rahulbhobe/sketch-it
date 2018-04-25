@@ -3,13 +3,13 @@ import request from 'request';
 import base64 from 'base-64';
 import {promisify} from 'es6-promisify';
 
-
 class ForgeUtils {
   static DAS_URL          = 'https://developer.api.autodesk.com/da/us-east/v3';
   static CLIENT_ID        = process.env.CLIENT_ID || '';
   static CLIENT_SECRET    = process.env.CLIENT_SECRET || '';
   static AUTH_SCOPE       = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete', 'code:all'];
   static BUCKET_KEY       = 'sketchit_testing';
+  static POLLING_DELAY    = 5000;
   static _oAuth2TwoLegged = null;
 
   static init () {
@@ -25,6 +25,10 @@ class ForgeUtils {
     });
   };
 
+  static delay (ms) {
+    return new Promise(_ => setTimeout(_, ms || this.POLLING_DELAY));
+  };
+
   static getOrCreateBucket () {
     let BucketsApi = new ForgeSDK.BucketsApi();
     let bucketKey = this.BUCKET_KEY;
@@ -32,8 +36,8 @@ class ForgeUtils {
     return BucketsApi.getBucketDetails(bucketKey, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials()).catch(err => {
       let policyKey = 'temporary';
       return BucketsApi.createBucket({bucketKey, policyKey}, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
-    }).then(obj => {
-      return obj.body.bucketKey;
+    }).then(({body:{bucketKey}}) => {
+      return bucketKey;
     });
   };
 
@@ -42,8 +46,8 @@ class ForgeUtils {
     let bucketKey = this.BUCKET_KEY;
     return ObjectsApi.uploadObject(bucketKey, objectName, 0, '', {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials()).then(res => {
       return ObjectsApi.createSignedResource(bucketKey, objectName, {}, {access: 'write'}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
-    }).then(({body}) => {
-      return body.signedUrl;
+    }).then(({body:{signedUrl}}) => {
+      return signedUrl;
     });
   };
 
@@ -66,7 +70,7 @@ class ForgeUtils {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
     let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
     return DerivativesApi.getManifest(urn, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials())
-                         .then(({body}) => body.status);
+                         .then(({body:{status}}) => status);
   };
 
   static getDerivativesLoop (objectName) {
@@ -74,35 +78,30 @@ class ForgeUtils {
       if (status!=='pending'&&status!=='inprogress') {
         return Promise.resolve(status);
       }
-      let delay = ms => new Promise(r => setTimeout(r, ms));
-      return delay(5000).then(() => {
-        return this.getDerivativesLoop(objectName);
-      });
+      return this.delay().then(_ => this.getDerivativesLoop(objectName));
     });
   };
 
   static postWorkitem(payload) {
-    return promisify(request.post)({
-        url: this.DAS_URL + '/workitems',
-        headers: {
-          'Authorization': 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
-        },
-        json: payload
-    }).then(({body}) => {
-      return body.id;
-    });
+    let params = {
+      url: this.DAS_URL + '/workitems',
+      headers: {
+        Authorization: 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
+      },
+      json: payload
+    }
+    return promisify(request.post)(params).then(({body:{id}}) => id);
   };
 
   static getWorkitemStatus (id) {
-    return promisify(request)({
+    let params = {
       url: this.DAS_URL + '/workitems/' + id,
       headers: {
         'Authorization': 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
       },
       method: 'GET'
-    }).then(({body}) => {
-      return JSON.parse(body).status;
-    });
+    };
+    return promisify(request)(params).then(({body}) => JSON.parse(body).status);
   };
 
   static getWorkitemStatusLoop (id) {
@@ -110,10 +109,7 @@ class ForgeUtils {
       if (status!=='pending'&&status!=='inprogress') {
         return Promise.resolve(status);
       }
-      let delay = ms => new Promise(r => setTimeout(r, ms));
-      return delay(5000).then(() => {
-        return this.getWorkitemStatusLoop(id);
-      });
+      return this.delay().then(_ => this.getWorkitemStatusLoop(id));
     });
   };
 };
