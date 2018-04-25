@@ -17,3 +17,7 @@ export const RESET_UP_VECTOR                    = 'RESET_UP_VECTOR';
 export const SET_ORIGIN                         = 'SET_ORIGIN';
 export const RESET_ORIGIN                       = 'RESET_ORIGIN';
 export const SET_CANVAS_DIMENSIONS              = 'SET_CANVAS_DIMENSIONS';
+export const SET_MODEL_NAME                     = 'SET_MODEL_NAME';
+export const RESET_MODEL_NAME                   = 'RESET_MODEL_NAME';
+export const SET_MODEL_THUMBNAIL                = 'SET_MODEL_THUMBNAIL';
+export const RESET_MODEL_THUMBNAIL              = 'RESET_MODEL_THUMBNAIL';

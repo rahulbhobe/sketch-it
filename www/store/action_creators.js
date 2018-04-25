@@ -75,3 +75,19 @@ export let resetOrigin = () => {
 export let setCanvasDimensions = (width, height) => {
   return { type: ActionTypes.SET_CANVAS_DIMENSIONS, value: {width, height} };
 };
+
+export let setModelName = (name) => {
+  return { type: ActionTypes.SET_MODEL_NAME, value: name };
+};
+
+export let resetModelName = () => {
+  return { type: ActionTypes.RESET_MODEL_NAME };
+};
+
+export let setModelThumbnail = (thumbnail) => {
+  return { type: ActionTypes.SET_MODEL_THUMBNAIL, value: thumbnail };
+};
+
+export let resetModelThumbnail = () => {
+  return { type: ActionTypes.RESET_MODEL_THUMBNAIL };
+};
