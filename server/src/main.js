@@ -27,12 +27,12 @@ app.get('/*', (req, res, next) => {
 
 app.get('/thumbnail', (req, res) => {
   let {fileId} = req.query;
-  ForgeUtils.delay(40000).then(_ => {
-    return ForgeUtils.getDerivativesLoop(fileId);
-  }).then(_ => {
+  ForgeUtils.getDerivatives(fileId).then(_ => {
     return ForgeUtils.getThumbnail(fileId);
   }).then(thumbnail => {
-    res.json({thumbnail});
+    res.json({found: true,  thumbnail});
+  }).catch(_ => {
+    res.json({found: false, thumbnail: ''});
   });
 });
 

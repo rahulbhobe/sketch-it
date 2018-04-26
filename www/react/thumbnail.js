@@ -9,10 +9,27 @@ class Thumbnail extends React.Component {
     this.onClick = this.onClick.bind(this);
   };
 
+  delay (ms) {
+    return new Promise(_ => setTimeout(_, ms || 5000));
+  };
+
+  getThumbnail () {
+    let qs = {fileId: this.props.modelName};
+    return RequestUtils.getRequest('/thumbnail', qs);
+  };
+
+  getThumbnailLoop () {
+    return this.getThumbnail().then(data => {
+      if (data.found) {
+        return Promise.resolve(data);
+      }
+      return this.delay().then(_ => this.getThumbnailLoop());
+    });
+  };
+
   updateThumbnail () {
     this.props.actions.resetModelThumbnail();
-    let qs = {fileId: this.props.modelName};
-    RequestUtils.getRequest('/thumbnail', qs).then(({thumbnail}) => {
+    this.getThumbnailLoop().then(({thumbnail}) => {
       this.props.actions.setModelThumbnail(thumbnail);
     });
   };
