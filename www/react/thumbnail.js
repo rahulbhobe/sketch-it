@@ -9,6 +9,14 @@ class Thumbnail extends React.Component {
     this.onClick = this.onClick.bind(this);
   };
 
+  updateThumbnail () {
+    this.props.actions.resetModelThumbnail();
+    let data = base64.encode(JSON.stringify({fileId: this.props.modelName}));
+    RequestUtils.postRequest('/thumbnail', {data}).then(({thumbnail}) => {
+      this.props.actions.setModelThumbnail(thumbnail);
+    });
+  };
+
   onClick () {
     let walls  = this.props.documentElements
                     .filter(elem => elem.type === 'wall')
@@ -19,7 +27,10 @@ class Thumbnail extends React.Component {
     let data = base64.encode(JSON.stringify({walls, floors}));
 
     RequestUtils.postRequest('/create', {data})
-                .then(({fileId}) => console.log(fileId));
+                .then(({fileId}) => {
+                  this.props.actions.setModelName(fileId);
+                  this.updateThumbnail();
+                });
   };
 
   render () {
@@ -37,7 +48,9 @@ class Thumbnail extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    documentElements: state.documentElements
+    documentElements: state.documentElements,
+    modelName: state.modelName,
+    modelThumbnail: state.modelThumbnail
   };
 };
 

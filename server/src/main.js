@@ -24,6 +24,18 @@ app.get('/*', (req, res) => {
   }
 });
 
+app.post('/thumbnail', (req, res) => {
+  let data = JSON.parse(base64.decode(req.body.data));
+  let {fileId} = data;
+  ForgeUtils.delay(40000).then(_ => {
+    return ForgeUtils.getDerivativesLoop(fileId);
+  }).then(_ => {
+    return ForgeUtils.getThumbnail(fileId);
+  }).then(thumbnail => {
+    res.send({thumbnail});
+  });
+});
+
 app.post('/create', (req, res) => {
   let data = JSON.parse(base64.decode(req.body.data));
   let fileId = shortid.generate() + '.rvt';

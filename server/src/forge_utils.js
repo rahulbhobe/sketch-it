@@ -82,6 +82,13 @@ class ForgeUtils {
     });
   };
 
+  static getThumbnail (objectName) {
+    let DerivativesApi = new ForgeSDK.DerivativesApi();
+    let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
+    return DerivativesApi.getThumbnail(urn, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials())
+                         .then(({body}) => new Buffer(body).toString('base64'));
+  };
+
   static postWorkitem(payload) {
     let params = {
       url: this.DAS_URL + '/workitems',
