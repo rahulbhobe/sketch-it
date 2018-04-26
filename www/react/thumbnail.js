@@ -50,14 +50,31 @@ class Thumbnail extends React.Component {
                 });
   };
 
+  getComponent () {
+    if (!this.props.modelName) {
+      return (<div className='tn-button' onClick={this.onClick}>
+        <span className='tn-button-span'>
+          Upload to Design Automation for Revit
+        </span>
+      </div>);
+    } else if (!this.props.modelThumbnail) {
+      return (<div className='tn-button'>
+        <span className='tn-button-span'>
+          Waiting for translation
+        </span>
+      </div>);
+    } else if (this.props.modelThumbnail) {
+      return (<div className='tn-button'>
+        <img src={'data:image/png;base64,' + this.props.modelThumbnail} />
+      </div>);
+    }
+
+  };
+
   render () {
     return (
       <div id='thumbnail'>
-        <div className='tn-button' onClick={this.onClick}>
-          <span className='tn-button-span'>
-            Upload to Design Automation for Revit
-          </span>
-        </div>
+        {this.getComponent()}
       </div>
     );
   };
