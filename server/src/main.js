@@ -16,35 +16,35 @@ app.set('views', __dirname + '/../../www');
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 
-app.get('/*', (req, res) => {
+app.get('/*', (req, res, next) => {
   let url = req.path.substring(1);
   if (!url) {
     res.render('index');
     return;
   }
+  next();
 });
 
-app.post('/thumbnail', (req, res) => {
-  let data = JSON.parse(base64.decode(req.body.data));
-  let {fileId} = data;
+app.get('/thumbnail', (req, res) => {
+  let {fileId} = req.query;
   ForgeUtils.delay(40000).then(_ => {
     return ForgeUtils.getDerivativesLoop(fileId);
   }).then(_ => {
     return ForgeUtils.getThumbnail(fileId);
   }).then(thumbnail => {
-    res.send({thumbnail});
+    res.json({thumbnail});
   });
 });
 
 app.post('/create', (req, res) => {
-  let data = JSON.parse(base64.decode(req.body.data));
+  let {elements} = req.body;
   let fileId = shortid.generate() + '.rvt';
   ForgeUtils.createSignedResource(fileId).then(signedUrl => {
     let payLoad = {
       activityId: 'SketchItDemo.SketchItActivity+test',
       arguments: {
         sketchItInput: {
-          url: 'data:application/json,'+JSON.stringify(data)
+          url: 'data:application/json,'+JSON.stringify(elements)
         },
         result: {
           'verb': 'put',
@@ -66,8 +66,7 @@ app.post('/create', (req, res) => {
   }).catch(err => {
     console.log(err)
   });
-
-  res.send({fileId});
+  res.json({fileId});
 });
 
 app.set('port', process.env.PORT || 3000);

@@ -105,8 +105,7 @@ class ForgeUtils {
       url: this.DAS_URL + '/workitems/' + id,
       headers: {
         'Authorization': 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
-      },
-      method: 'GET'
+      }
     };
     return promisify(request)(params).then(({body}) => JSON.parse(body).status);
   };

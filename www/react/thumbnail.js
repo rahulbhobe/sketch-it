@@ -11,8 +11,8 @@ class Thumbnail extends React.Component {
 
   updateThumbnail () {
     this.props.actions.resetModelThumbnail();
-    let data = base64.encode(JSON.stringify({fileId: this.props.modelName}));
-    RequestUtils.postRequest('/thumbnail', {data}).then(({thumbnail}) => {
+    let qs = {fileId: this.props.modelName};
+    RequestUtils.getRequest('/thumbnail', qs).then(({thumbnail}) => {
       this.props.actions.setModelThumbnail(thumbnail);
     });
   };
@@ -24,9 +24,9 @@ class Thumbnail extends React.Component {
     let floors = this.props.documentElements
                     .filter(elem => elem.type === 'floor')
                     .map(elem => elem.export());
-    let data = base64.encode(JSON.stringify({walls, floors}));
+    let elements = {walls, floors};
 
-    RequestUtils.postRequest('/create', {data})
+    RequestUtils.postRequest('/create', {elements})
                 .then(({fileId}) => {
                   this.props.actions.setModelName(fileId);
                   this.updateThumbnail();
