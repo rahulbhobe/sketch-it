@@ -2,6 +2,7 @@ import React from 'react';
 import ReduxUtils from '../utils/redux_utils';
 import RequestUtils from '../utils/request_utils';
 import base64 from 'base-64';
+import classNames from 'classnames';
 
 class Thumbnail extends React.Component {
   constructor (props) {
@@ -52,20 +53,20 @@ class Thumbnail extends React.Component {
 
   getComponent () {
     if (!this.props.modelName) {
-      return (<div className='tn-button' onClick={this.onClick}>
+      return (<div className={classNames('tn-button', 'tn-button-green')} onClick={this.onClick}>
         <span className='tn-button-span'>
           Upload to Design Automation for Revit
         </span>
       </div>);
     } else if (!this.props.modelThumbnail) {
-      return (<div className='tn-button'>
+      return (<div className={classNames('tn-button', 'tn-button-yellow')}>
         <span className='tn-button-span'>
           Waiting for translation
         </span>
       </div>);
     } else if (this.props.modelThumbnail) {
-      return (<div className='tn-button'>
-        <img src={'data:image/png;base64,' + this.props.modelThumbnail} />
+      return (<div className={classNames('tn-button')}>
+        <img className={classNames('tn-button-image')} src={'data:image/png;base64,' + this.props.modelThumbnail} />
       </div>);
     }
 
