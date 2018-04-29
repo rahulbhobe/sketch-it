@@ -7,7 +7,8 @@ import classNames from 'classnames';
 class Thumbnail extends React.Component {
   constructor (props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
+    this.onTranslateModel = this.onTranslateModel.bind(this);
+    this.onShowModel = this.onShowModel.bind(this);
   };
 
   delay (ms) {
@@ -35,7 +36,7 @@ class Thumbnail extends React.Component {
     });
   };
 
-  onClick () {
+  onTranslateModel () {
     let walls  = this.props.documentElements
                     .filter(elem => elem.type === 'wall')
                     .map(elem => elem.export());
@@ -51,9 +52,13 @@ class Thumbnail extends React.Component {
                 });
   };
 
+  onShowModel () {
+    this.props.actions.setShowModel(true);
+  };
+
   getComponent () {
     if (!this.props.modelName) {
-      return (<div className={classNames('tn-button', 'tn-button-green')} onClick={this.onClick}>
+      return (<div className={classNames('tn-button', 'tn-button-green')} onClick={this.onTranslateModel}>
         <span className='tn-button-span'>
           Upload to Design Automation for Revit
         </span>
@@ -66,7 +71,7 @@ class Thumbnail extends React.Component {
       </div>);
     } else if (this.props.modelThumbnail) {
       return (<div className={classNames('tn-button')}>
-        <img className={classNames('tn-button-image')} src={'data:image/png;base64,' + this.props.modelThumbnail} />
+        <img className={classNames('tn-button-image')} src={'data:image/png;base64,' + this.props.modelThumbnail} onClick={this.onShowModel}/>
       </div>);
     }
 

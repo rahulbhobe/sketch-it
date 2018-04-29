@@ -99,6 +99,16 @@ let canvasDimensionsReducer = (state, action) => {
   return state || init;
 };
 
+let showModelReducer = (state, action) => {
+  let init = false;
+  if (action.type === ActionTypes.SET_SHOW_MODEL) {
+    return action.value;
+  } else if (action.type === ActionTypes.RESET_SHOW_MODEL) {
+    return init;
+  }
+  return state || init;
+};
+
 let modelNameReducer = (state, action) => {
   let init = '';
   if (action.type === ActionTypes.SET_MODEL_NAME) {
@@ -130,6 +140,7 @@ let reducers = combineReducers({
   upVector: upVectorReducer,
   origin: originReducer,
   canvasDimensions: canvasDimensionsReducer,
+  showModel: showModelReducer,
   modelName: modelNameReducer,
   modelThumbnail: modelThumbnailReducer
 });

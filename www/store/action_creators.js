@@ -76,6 +76,14 @@ export let setCanvasDimensions = (width, height) => {
   return { type: ActionTypes.SET_CANVAS_DIMENSIONS, value: {width, height} };
 };
 
+export let setShowModel = (show) => {
+  return { type: ActionTypes.SET_SHOW_MODEL, value: show };
+};
+
+export let resetShowModel = () => {
+  return { type: ActionTypes.RESET_SHOW_MODEL };
+};
+
 export let setModelName = (name) => {
   return { type: ActionTypes.SET_MODEL_NAME, value: name };
 };
