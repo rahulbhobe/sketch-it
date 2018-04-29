@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import favicon from 'serve-favicon';
 import shortid from 'shortid';
+import ForgeSDK from 'forge-apis';
 import ForgeUtils from './forge_utils';
 import base64 from 'base-64';
 
@@ -24,6 +25,19 @@ app.get('/*', (req, res, next) => {
   }
   next();
 });
+
+app.get('/token', (req, res) => {
+  let url = 'https://developer.api.autodesk.com/da/us-east/v3';
+  let clientId = process.env.CLIENT_ID || '';
+  let clientSecret = process.env.CLIENT_SECRET || '';
+  let authScope    = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete', 'code:all'];
+  let oAuth2TwoLegged = new ForgeSDK.AuthClientTwoLegged(clientId, clientSecret, authScope, true);
+
+  oAuth2TwoLegged.authenticate().then(token => {
+    res.json(token);
+  });
+});
+
 
 app.get('/thumbnail', (req, res) => {
   let {fileId} = req.query;
