@@ -1,5 +1,7 @@
 import React from 'react';
+import ReduxUtils from '../utils/redux_utils';
 import Canvas from './canvas';
+import Viewer from './viewer';
 import SideBar from './side_bar';
 
 let HeaderView = () => (
@@ -14,13 +16,23 @@ let FooterView = () => (
   </div>
 );
 
-let SketchIt = () => (
-  <div id="container">
-    <HeaderView />
-    <Canvas />
-    <SideBar />
-    <FooterView />
-  </div>
-);
+class SketchIt extends React.Component {
+  render () {
+    return (
+      <div id="container">
+        <HeaderView />
+        {!this.props.showModel ? (<Canvas />) : (<Viewer />)}
+        <SideBar />
+        <FooterView />
+      </div>
+    );
+  };
+};
 
-export default SketchIt;
+let mapStateToProps = (state, ownProps) => {
+  return {
+    showModel: state.showModel,
+  };
+};
+
+export default ReduxUtils.connect(mapStateToProps)(SketchIt);

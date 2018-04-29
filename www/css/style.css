@@ -19,7 +19,7 @@ html, body {
   grid-template-rows: var(--header-height) auto var(--footer-height);
   grid-template-areas: 
     "header header"
-    "canvas sidebar"
+    "main sidebar"
     "footer footer";
 }
 
@@ -39,8 +39,13 @@ html, body {
   line-height: var(--footer-height) ;
 }
 
+#viewer {
+  grid-area: main;
+  border: 2px solid black;
+}
+
 #canvas {
-  grid-area: canvas;
+  grid-area: main;
   border: 2px solid black;
 }
 
