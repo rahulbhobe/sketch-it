@@ -33,9 +33,9 @@ class ForgeUtils {
     let BucketsApi = new ForgeSDK.BucketsApi();
     let bucketKey = this.BUCKET_KEY;
 
-    return BucketsApi.getBucketDetails(bucketKey, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials()).catch(err => {
+    return BucketsApi.getBucketDetails(bucketKey, null, this._oAuth2TwoLegged.getCredentials()).catch(err => {
       let policyKey = 'temporary';
-      return BucketsApi.createBucket({bucketKey, policyKey}, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
+      return BucketsApi.createBucket({bucketKey, policyKey}, {}, null, this._oAuth2TwoLegged.getCredentials());
     }).then(({body:{bucketKey}}) => {
       return bucketKey;
     });
@@ -44,8 +44,8 @@ class ForgeUtils {
   static createSignedResource (objectName) {
     let ObjectsApi = new ForgeSDK.ObjectsApi();
     let bucketKey = this.BUCKET_KEY;
-    return ObjectsApi.uploadObject(bucketKey, objectName, 0, '', {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials()).then(res => {
-      return ObjectsApi.createSignedResource(bucketKey, objectName, {}, {access: 'write'}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
+    return ObjectsApi.uploadObject(bucketKey, objectName, 0, '', {}, null, this._oAuth2TwoLegged.getCredentials()).then(res => {
+      return ObjectsApi.createSignedResource(bucketKey, objectName, {}, {access: 'write'}, null, this._oAuth2TwoLegged.getCredentials());
     }).then(({body:{signedUrl}}) => {
       return signedUrl;
     });
@@ -63,13 +63,13 @@ class ForgeUtils {
         }
       ]
     };
-    return DerivativesApi.translate({input, output}, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials());
+    return DerivativesApi.translate({input, output}, {}, null, this._oAuth2TwoLegged.getCredentials());
   };
 
   static getDerivatives (objectName) {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
     let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
-    return DerivativesApi.getManifest(urn, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials())
+    return DerivativesApi.getManifest(urn, {}, null, this._oAuth2TwoLegged.getCredentials())
                          .then(({body:{status}}) => status);
   };
 
@@ -85,7 +85,7 @@ class ForgeUtils {
   static getThumbnail (objectName) {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
     let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
-    return DerivativesApi.getThumbnail(urn, {}, this._oAuth2TwoLegged, this._oAuth2TwoLegged.getCredentials())
+    return DerivativesApi.getThumbnail(urn, {}, null, this._oAuth2TwoLegged.getCredentials())
                          .then(({body}) => new Buffer(body).toString('base64'));
   };
 
