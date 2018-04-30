@@ -48,6 +48,11 @@ class Canvas extends React.Component {
 
   componentDidMount () {
     this.setCanvasDimensions();
+    this.refs.events.register();
+  };
+
+  componentWillUnmount () {
+    this.refs.events.unregister();
   };
 
   renderElements (temp) {
@@ -71,7 +76,7 @@ class Canvas extends React.Component {
             {this.renderElements(true)}
           </g>
         </svg>
-        <CanvasEvents getSvg={this.getSvg} getScreenToModel={this.getScreenToModel} />
+        <CanvasEvents getSvg={this.getSvg} getScreenToModel={this.getScreenToModel} actions={this.props.actions} ref='events' />
       </div>
     );
   };

@@ -1,7 +1,6 @@
 import React from 'react';
 import debounce from 'debounce';
 import {Vector, Matrix} from '../mathutils/gl_matrix_wrapper';
-import ReduxUtils from '../utils/redux_utils';
 import store from '../store/store';
 
 class CanvasEvents extends React.Component {
@@ -59,7 +58,7 @@ class CanvasEvents extends React.Component {
     return points[0].asObj();
   };
 
-  componentDidMount () {
+  register () {
     let svg = this.props.getSvg();
     svg.addEventListener('mousemove', this.onMouseMove, false);
     svg.addEventListener('mouseup', this.onMouseUp, false);
@@ -72,7 +71,7 @@ class CanvasEvents extends React.Component {
     svg.oncontextmenu = this.onContextMenu;
   };
 
-  componentWillUnmount () {
+  unregister () {
     let svg = this.props.getSvg();
     svg.removeEventListener('mousemove', this.onMouseMove, false);
     svg.removeEventListener('mouseup', this.onMouseUp, false);
@@ -101,10 +100,10 @@ class CanvasEvents extends React.Component {
 
     if (!event.shiftKey) {
       dataType = 'pan';
-      data.origin = this.props.origin;
+      data.origin = store.getState().origin;
     } else {
       dataType = 'rotate';
-      data.upVector = this.props.upVector;
+      data.upVector = store.getState().upVector;
     }
 
     this.props.actions.setEventData(dataType, this.getPositionAtEvent(event, false), data);
@@ -153,7 +152,7 @@ class CanvasEvents extends React.Component {
     let dataType  = 'none';
     let data      = {};
     let wheelDistance = Math.round(event.wheelDeltaY/30);
-    let zoomFactor    = this.props.zoomFactor + wheelDistance;
+    let zoomFactor    = store.getState().zoomFactor + wheelDistance;
     if (zoomFactor < 25) {
       zoomFactor = 25;
     } else if (zoomFactor > 200) {
@@ -162,13 +161,13 @@ class CanvasEvents extends React.Component {
 
     if (wheelDistance > 0) {
       dataType = 'zoomin';
-      data.zoomFactor = this.props.zoomFactor;
+      data.zoomFactor = store.getState().zoomFactor;
     } else if (wheelDistance < 0) {
       dataType = 'zoomout';
-      data.zoomFactor = this.props.zoomFactor;
+      data.zoomFactor = store.getState().zoomFactor;
     }
 
-    if (zoomFactor !== this.props.zoomFactor) {
+    if (zoomFactor !== store.getState().zoomFactor) {
       this.props.actions.setEventData(dataType, this.getPositionAtEvent(event, false), data);
       this.props.actions.setZoomFactor(zoomFactor);
     }
@@ -245,14 +244,14 @@ class CanvasEvents extends React.Component {
   };
 
   handleEditorEvent (event, type) {
-    let {editor} = this.props;
+    let {editor} = store.getState();
     if (editor==='none') return;
     let point     = this.createVectorInModelCoordinates(this.getPositionAtEvent(event, true)).asObj();
     this.props.actions.setEditorEvent({type, point});
   };
 
   finishEditor () {
-    let {editor} = this.props;
+    let {editor} = store.getState();
     if (!editor) return;
     this.props.actions.setEditorEvent({type: 'done'});
     this.props.actions.resetEditor();
@@ -268,13 +267,4 @@ class CanvasEvents extends React.Component {
   };
 };
 
-let mapStateToProps = (state, ownProps) => {
-  return {
-    editor: state.editor,
-    zoomFactor: state.zoomFactor,
-    upVector: state.upVector,
-    origin: state.origin
-  };
-};
-
-export default ReduxUtils.connect(mapStateToProps, true)(CanvasEvents);
+export default CanvasEvents;
