@@ -44,6 +44,12 @@ html, body {
   border: 2px solid black;
 }
 
+#forge-viewer {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
 #canvas {
   grid-area: main;
   border: 2px solid black;
