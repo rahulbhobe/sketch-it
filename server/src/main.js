@@ -30,7 +30,7 @@ app.get('/token', (req, res) => {
   let url = 'https://developer.api.autodesk.com/da/us-east/v3';
   let clientId = process.env.CLIENT_ID || '';
   let clientSecret = process.env.CLIENT_SECRET || '';
-  let authScope    = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete', 'code:all'];
+  let authScope    = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete', 'viewables:read', 'code:all'];
   let oAuth2TwoLegged = new ForgeSDK.AuthClientTwoLegged(clientId, clientSecret, authScope, true);
 
   oAuth2TwoLegged.authenticate().then(token => {
