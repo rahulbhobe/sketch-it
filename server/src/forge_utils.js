@@ -41,12 +41,16 @@ class ForgeUtils {
     });
   };
 
-  static createSignedResource (objectName, access='write') {
+  static createEmptyResource (objectName, access='write') {
     let ObjectsApi = new ForgeSDK.ObjectsApi();
     let bucketKey = this.BUCKET_KEY;
-    return ObjectsApi.uploadObject(bucketKey, objectName, 0, '', {}, null, this._oAuth2TwoLegged.getCredentials()).then(res => {
-      return ObjectsApi.createSignedResource(bucketKey, objectName, {}, {access}, null, this._oAuth2TwoLegged.getCredentials());
-    }).then(({body:{signedUrl}}) => {
+    return ObjectsApi.uploadObject(bucketKey, objectName, 0, '', {}, null, this._oAuth2TwoLegged.getCredentials());
+  };
+
+  static createSignedResource (objectName, access='read') {
+    let ObjectsApi = new ForgeSDK.ObjectsApi();
+    let bucketKey = this.BUCKET_KEY;
+    return ObjectsApi.createSignedResource(bucketKey, objectName, {}, {access}, null, this._oAuth2TwoLegged.getCredentials()).then(({body:{signedUrl}}) => {
       return signedUrl;
     });
   };

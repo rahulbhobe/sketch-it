@@ -51,7 +51,7 @@ app.get('/thumbnail', (req, res) => {
 
 app.get('/download', (req, res) => {
   let {fileId} = req.query;
-  ForgeUtils.createSignedResource(fileId, 'read').then(signedUrl => {
+  ForgeUtils.createSignedResource(fileId).then(signedUrl => {
     res.json({found: true,  signedUrl});
   }).catch(_ => {
     res.json({found: false, thumbnail: ''});
@@ -61,7 +61,10 @@ app.get('/download', (req, res) => {
 app.post('/create', (req, res) => {
   let {elements} = req.body;
   let fileId = shortid.generate() + '.rvt';
-  ForgeUtils.createSignedResource(fileId).then(signedUrl => {
+
+  ForgeUtils.createEmptyResource(fileId).then(_ => {
+    return ForgeUtils.createSignedResource(fileId, 'write');
+  }).then(signedUrl => {
     let payLoad = {
       activityId: 'SketchItDemo.SketchItActivity+test',
       arguments: {
