@@ -155,8 +155,8 @@ class CanvasEvents extends React.Component {
     let zoomFactor    = store.getState().zoomFactor + wheelDistance;
     if (zoomFactor < 25) {
       zoomFactor = 25;
-    } else if (zoomFactor > 200) {
-      zoomFactor = 200;
+    } else if (zoomFactor > 400) {
+      zoomFactor = 400;
     }
 
     if (wheelDistance > 0) {
