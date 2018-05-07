@@ -79,7 +79,7 @@ app.post('/create', (req, res) => {
     };
     return ForgeUtils.postWorkitem(payLoad);
   }).then(id => {
-    console.log(id);
+    console.log('posted -', id);
     return ForgeUtils.getWorkitemStatusLoop(id);
   }).then(status => {
     console.log(status, '- generated ' + fileId);
