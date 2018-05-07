@@ -26,6 +26,14 @@ class Editor extends React.Component {
     let {event} = this.props;
     if (!event) return false;
 
+    if ((event.type === 'chain') && (!this.props.needsLoop)) {
+      this.props.actions.addDocumentElements(this.generateElements(false));
+      let points = this.props.points.slice();
+      this.editorReset();
+      this.props.actions.addEditorPoints([points[points.length-1]]);
+      return true;
+    }
+
     if (event.type === 'done') {
       this.props.actions.addDocumentElements(this.generateElements(false));
       this.editorReset();
@@ -33,8 +41,13 @@ class Editor extends React.Component {
     }
 
     if (event.type === 'click') {
-      this.props.actions.resetEditorEvent();
       this.props.actions.addEditorPoints([event.point]);
+      if (this.props.points.length === 1) {
+        this.props.actions.setEditorEvent({type: 'chain'});
+      } else {
+        this.props.actions.resetEditorEvent();
+      }
+
       return true;
     }
 

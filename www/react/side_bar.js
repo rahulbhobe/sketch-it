@@ -10,14 +10,14 @@ class SideBar extends React.Component {
 
   getEditorData () {
     return [
-      { type: 'wall',       generateElems: ElementUtils.generateWallsFromPoints  },
-      { type: 'floor',      generateElems: ElementUtils.generateFloorsFromPoints },
-      { type: 'door',       generateElems: null },
-      { type: 'window',     generateElems: null },
-      { type: 'ceiling',    generateElems: null },
-      { type: 'roof',       generateElems: null },
-      { type: 'component',  generateElems: null },
-      { type: 'column',     generateElems: null }
+      { type: 'wall',       needsLoop: false, generateElems: ElementUtils.generateWallsFromPoints  },
+      { type: 'floor',      needsLoop: true,  generateElems: ElementUtils.generateFloorsFromPoints },
+      { type: 'door',       needsLoop: false, generateElems: null },
+      { type: 'window',     needsLoop: false, generateElems: null },
+      { type: 'ceiling',    needsLoop: false, generateElems: null },
+      { type: 'roof',       needsLoop: false, generateElems: null },
+      { type: 'component',  needsLoop: false, generateElems: null },
+      { type: 'column',     needsLoop: false, generateElems: null }
     ];
   };
 
@@ -27,7 +27,8 @@ class SideBar extends React.Component {
     if (editorData.length<1) return null;
     if (!editorData[0].generateElems) return null;
 
-    return (<Editor key={'editor_class'+editorData[0].type} generateElems={editorData[0].generateElems}/>);
+    let {type, ...propsToPass} = editorData[0];
+    return (<Editor key={'editor_class'+editorData[0].type} {...propsToPass}/>);
   };
 
   render () {
