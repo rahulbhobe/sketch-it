@@ -25,6 +25,7 @@ class Canvas extends React.Component {
     let negOrg = Vector.create(this.props.origin.x, this.props.origin.y).negate();
     matrixTransforms.append(m => m.translate(negOrg));
     matrixTransforms.append(m => m.scale(this.props.zoomFactor*0.01));
+    matrixTransforms.append(m => m.scale(10)); // Pixel to units.
 
     let upVec  = Vector.create(this.props.upVector.x, this.props.upVector.y);
     matrixTransforms.append(m => m.rotate(upVec.angleTo(Vector.create(0, 1))));
