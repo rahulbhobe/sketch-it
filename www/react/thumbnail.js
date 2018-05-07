@@ -9,6 +9,7 @@ class Thumbnail extends React.Component {
     super(props);
     this.onTranslateModel = this.onTranslateModel.bind(this);
     this.onShowModel = this.onShowModel.bind(this);
+    this.onDownloadModel = this.onDownloadModel.bind(this);
   };
 
   delay (ms) {
@@ -56,7 +57,16 @@ class Thumbnail extends React.Component {
     this.props.actions.setShowModel(true);
   };
 
+  onDownloadModel () {
+    let qs = {fileId: this.props.modelName};
+    RequestUtils.getRequest('/download', qs).then(data => {
+      if (!data.found) return;
+      RequestUtils.downloadFile(data.signedUrl);
+    });
+  };
+
   getComponent () {
+    let {showModel} = this.props;
     if (!this.props.modelName) {
       return (<div className={classNames('tn-button', 'tn-button-green')} onClick={this.onTranslateModel}>
         <span className='tn-button-span'>
@@ -71,7 +81,7 @@ class Thumbnail extends React.Component {
       </div>);
     } else if (this.props.modelThumbnail) {
       return (<div className={classNames('tn-button')}>
-        <img className={classNames('tn-button-image')} src={'data:image/png;base64,' + this.props.modelThumbnail} onClick={this.onShowModel}/>
+        <img className={classNames('tn-button-image')} src={'data:image/png;base64,' + this.props.modelThumbnail} onClick={showModel ? this.onDownloadModel : this.onShowModel}/>
       </div>);
     }
 
@@ -90,7 +100,8 @@ let mapStateToProps = (state, ownProps) => {
   return {
     documentElements: state.documentElements,
     modelName: state.modelName,
-    modelThumbnail: state.modelThumbnail
+    modelThumbnail: state.modelThumbnail,
+    showModel: state.showModel
   };
 };
 

@@ -38,13 +38,21 @@ app.get('/token', (req, res) => {
   });
 });
 
-
 app.get('/thumbnail', (req, res) => {
   let {fileId} = req.query;
   ForgeUtils.getDerivatives(fileId).then(_ => {
     return ForgeUtils.getThumbnail(fileId);
   }).then(thumbnail => {
     res.json({found: true,  thumbnail});
+  }).catch(_ => {
+    res.json({found: false, thumbnail: ''});
+  });
+});
+
+app.get('/download', (req, res) => {
+  let {fileId} = req.query;
+  ForgeUtils.createSignedResource(fileId, 'read').then(signedUrl => {
+    res.json({found: true,  signedUrl});
   }).catch(_ => {
     res.json({found: false, thumbnail: ''});
   });
