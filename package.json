@@ -32,6 +32,7 @@
     "express": "4.16.3",
     "forge-apis": "0.4.1",
     "gl-matrix": "2.4.1",
+    "is-url": "1.2.4",
     "jquery": "3.3.1",
     "popper.js": "1.14.3",
     "react": "16.3.2",
