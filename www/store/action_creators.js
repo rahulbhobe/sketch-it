@@ -16,12 +16,20 @@ export let resetTemporaryElements = () => {
   return { type: ActionTypes.RESET_TEMPORARY_ELEMENTS };
 };
 
-export let setEditor = (editor) => {
-  return { type: ActionTypes.SET_EDITOR, value: editor };
+export let setEditorElem = (elem) => {
+  return { type: ActionTypes.SET_EDITOR_ELEM, value: elem };
 };
 
-export let resetEditor = () => {
-  return { type: ActionTypes.RESET_EDITOR };
+export let resetEditorElem = () => {
+  return { type: ActionTypes.RESET_EDITOR_ELEM };
+};
+
+export let setEditorCurve = (curve) => {
+  return { type: ActionTypes.SET_EDITOR_CURVE, value: curve };
+};
+
+export let resetEditorCurve = () => {
+  return { type: ActionTypes.RESET_EDITOR_CURVE };
 };
 
 export let addEditorPoints = (points) => {

@@ -21,11 +21,21 @@ let temporaryElementsReducer = (state, action) => {
   return state || init;
 };
 
-let editorReducer = (state, action) => {
+let editorElemReducer = (state, action) => {
   let init = 'none';
-  if (action.type === ActionTypes.SET_EDITOR) {
+  if (action.type === ActionTypes.SET_EDITOR_ELEM) {
     return action.value;
-  } else if (action.type === ActionTypes.RESET_EDITOR) {
+  } else if (action.type === ActionTypes.RESET_EDITOR_ELEM) {
+    return init;
+  }
+  return state || init;
+};
+
+let editorCurveReducer = (state, action) => {
+  let init = 'none';
+  if (action.type === ActionTypes.SET_EDITOR_CURVE) {
+    return action.value;
+  } else if (action.type === ActionTypes.RESET_EDITOR_CURVE) {
     return init;
   }
   return state || init;
@@ -132,7 +142,8 @@ let modelThumbnailReducer = (state, action) => {
 let reducers = combineReducers({
   documentElements: documentElementsReducer,
   temporaryElements: temporaryElementsReducer,
-  editor: editorReducer,
+  editorElem: editorElemReducer,
+  editorCurve: editorCurveReducer,
   editorPoints: editorPointsReducer,
   editorEvent: editorEventReducer,
   eventData: eventDataReducer,

@@ -12,10 +12,11 @@ class EditorButton extends React.Component {
     let {type, active} = this.props;
     if (active) {
       this.props.actions.setEditorEvent({type: 'cancel'});
-      this.props.actions.resetEditor();
+      this.props.actions.resetEditorElem();
+      this.props.actions.resetEditorCurve();
     }
     else {
-      this.props.actions.setEditor(type);
+      this.props.actions.setEditorElem(type);
     }
   };
 
@@ -29,7 +30,7 @@ class EditorButton extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    active: state.editor === ownProps.type,
+    active: state.editorElem === ownProps.type,
   };
 };
 

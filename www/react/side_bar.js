@@ -22,7 +22,7 @@ class SideBar extends React.Component {
   };
 
   getActiveEditorComponent () {
-    let editorData = this.getEditorData().filter(data => data.type === this.props.editor);
+    let editorData = this.getEditorData().filter(data => data.type === this.props.editorElem);
 
     if (editorData.length<1) return null;
     if (!editorData[0].generateElems) return null;
@@ -45,7 +45,7 @@ class SideBar extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    editor: state.editor,
+    editorElem: state.editorElem,
   };
 };
 

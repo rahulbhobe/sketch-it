@@ -251,10 +251,11 @@ class CanvasEvents extends React.Component {
   };
 
   finishEditor () {
-    let {editor} = store.getState();
-    if (!editor) return;
+    let {editorElem} = store.getState();
+    if (!editorElem) return;
     this.props.actions.setEditorEvent({type: 'done'});
-    this.props.actions.resetEditor();
+    this.props.actions.resetEditorElem();
+    this.props.actions.resetEditorCurve();
   };
 
   cancelPan () {
