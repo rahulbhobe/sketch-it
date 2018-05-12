@@ -1,44 +1,21 @@
 import React from 'react';
-import {Vector, MatrixTransformations} from '../mathutils/gl_matrix_wrapper';
 import ReduxUtils from '../utils/redux_utils';
 import ArrayUtils from '../utils/array_utils';
+import TransformUtils from '../utils/transform_utils';
 import CanvasEvents from './canvas_events';
 
 class Canvas extends React.Component {
   constructor(props) {
     super(props);
     this.getSvg = this.getSvg.bind(this);
-    this.getScreenToModel = this.getScreenToModel.bind(this);
   };
 
   getSvg () {
     return this.refs.svg;
   };
 
-  getScreenToModel () {
-    return this.getModelToScreen().invert();
-  };
-
-  getModelToScreen () {
-    let matrixTransforms = MatrixTransformations.create();
-
-    let negOrg = Vector.create(this.props.origin.x, this.props.origin.y).negate();
-    matrixTransforms.append(m => m.translate(negOrg));
-    matrixTransforms.append(m => m.scale(this.props.zoomFactor*0.01));
-    matrixTransforms.append(m => m.scale(10)); // Pixel to units.
-
-    let upVec  = Vector.create(this.props.upVector.x, this.props.upVector.y);
-    matrixTransforms.append(m => m.rotate(upVec.angleTo(Vector.create(0, 1))));
-
-    matrixTransforms.append(m => m.scale(1, -1));
-    let midRect = Vector.create(this.props.dimensions.width, this.props.dimensions.height).scale(0.5);
-    matrixTransforms.append(m => m.translate(midRect));
-
-    return matrixTransforms.getMatrix();
-  };
-
   getModelToScreenAsString () {
-    let matrix = this.getModelToScreen();
+    let matrix = TransformUtils.getModelToScreen();
     return 'matrix( ' + matrix.asArr().join(',') + ')';
   };
 
@@ -77,7 +54,7 @@ class Canvas extends React.Component {
             {this.renderElements(true)}
           </g>
         </svg>
-        <CanvasEvents getSvg={this.getSvg} getScreenToModel={this.getScreenToModel} actions={this.props.actions} ref='events' />
+        <CanvasEvents getSvg={this.getSvg} actions={this.props.actions} ref='events' />
       </div>
     );
   };
@@ -88,7 +65,7 @@ let mapStateToProps = (state, ownProps) => {
     zoomFactor: state.zoomFactor,
     upVector: state.upVector,
     origin: state.origin,
-    dimensions: state.canvasDimensions,
+    canvasDimensions: state.canvasDimensions,
     documentElements: state.documentElements,
     temporaryElements: state.temporaryElements
   };

@@ -1,6 +1,7 @@
 import React from 'react';
 import debounce from 'debounce';
 import {Vector, Matrix} from '../mathutils/gl_matrix_wrapper';
+import TransformUtils from '../utils/transform_utils';
 import store from '../store/store';
 
 class CanvasEvents extends React.Component {
@@ -50,7 +51,7 @@ class CanvasEvents extends React.Component {
       return pos;
 
     let posVec = Vector.create(pos.x, pos.y)
-    let modelToScreen = this.props.getScreenToModel().invert();
+    let modelToScreen = TransformUtils.getModelToScreen();
     let points = nodes.map(elem => JSON.parse(elem.getAttribute('data-snap')))
                       .map(obj  => modelToScreen.transformPoint(Vector.create(obj.x, obj.y)))
                       .sort((pnt1, pnt2) => pnt1.distanceFrom(posVec) < pnt2.distanceFrom(posVec));
@@ -213,7 +214,7 @@ class CanvasEvents extends React.Component {
   };
 
   createVectorInModelCoordinates (vecObj) {
-    let screenToModel = this.props.getScreenToModel();
+    let screenToModel = TransformUtils.getScreenToModel();
     return screenToModel.transformPoint(this.createVectorFromObj(vecObj));
   };
 
@@ -247,7 +248,7 @@ class CanvasEvents extends React.Component {
     let {editorElem} = store.getState();
     if (editorElem==='none') return;
     let point          = this.createVectorInModelCoordinates(this.getPositionAtEvent(event, true)).asObj();
-    let screenToModel  = this.props.getScreenToModel();
+    let screenToModel  = TransformUtils.getScreenToModel();
     this.props.actions.setEditorEvent({type, point, screenToModel});
   };
 
