@@ -1,117 +1,63 @@
 import * as ActionTypes from './action_types';
 
-export let addPermanentElements = (elements) => {
-  return { type: ActionTypes.ADD_PERMANENT_ELEMENTS, value: elements };
+let makeActionCreator = (type, valueFunc) => {
+  return (...args) => {
+    if (!valueFunc) return {type};
+    return { type, value:  valueFunc(...args)};
+  };
 };
 
-export let resetPermanentElements = () => {
-  return { type: ActionTypes.RESET_PERMANENT_ELEMENTS };
-};
+let identityFunc = value => value;
 
-export let setTemporaryElements = (elements) => {
-  return { type: ActionTypes.SET_TEMPORARY_ELEMENTS, value: elements };
-};
+export let addPermanentElements   = makeActionCreator(ActionTypes.ADD_PERMANENT_ELEMENTS, identityFunc);
+export let resetPermanentElements = makeActionCreator(ActionTypes.RESET_PERMANENT_ELEMENTS);
 
-export let resetTemporaryElements = () => {
-  return { type: ActionTypes.RESET_TEMPORARY_ELEMENTS };
-};
+export let setTemporaryElements   = makeActionCreator(ActionTypes.SET_TEMPORARY_ELEMENTS, identityFunc);
+export let resetTemporaryElements = makeActionCreator(ActionTypes.RESET_TEMPORARY_ELEMENTS);
 
-export let setEditorElem = (elem) => {
-  return { type: ActionTypes.SET_EDITOR_ELEM, value: elem };
-};
+export let setEditorElem          = makeActionCreator(ActionTypes.SET_EDITOR_ELEM, identityFunc);
+export let resetEditorElem        = makeActionCreator(ActionTypes.RESET_EDITOR_ELEM);
 
-export let resetEditorElem = () => {
-  return { type: ActionTypes.RESET_EDITOR_ELEM };
-};
+export let setEditorCurve         = makeActionCreator(ActionTypes.SET_EDITOR_CURVE, identityFunc);
+export let resetEditorCurve       = makeActionCreator(ActionTypes.RESET_EDITOR_CURVE);
 
-export let setEditorCurve = (curve) => {
-  return { type: ActionTypes.SET_EDITOR_CURVE, value: curve };
-};
+export let addEditorPoints        = makeActionCreator(ActionTypes.ADD_EDITOR_POINTS, identityFunc);
+export let resetEditorPoints      = makeActionCreator(ActionTypes.RESET_EDITOR_POINTS);
 
-export let resetEditorCurve = () => {
-  return { type: ActionTypes.RESET_EDITOR_CURVE };
-};
+export let setEditorEvent         = makeActionCreator(ActionTypes.SET_EDITOR_EVENT, identityFunc);
+export let resetEditorEvent       = makeActionCreator(ActionTypes.RESET_EDITOR_EVENT);
 
-export let addEditorPoints = (points) => {
-  return { type: ActionTypes.ADD_EDITOR_POINTS, value: points };
-};
 
-export let resetEditorPoints = () => {
-  return { type: ActionTypes.RESET_EDITOR_POINTS };
+let eventDataMap = (type, position, otherData = {}) => {
+  let startData = Object.assign(otherData, {position});
+  return { type, startData };
 };
+export let setEventData           = makeActionCreator(ActionTypes.SET_EVENT_DATA, eventDataMap);
+export let resetEventData         = makeActionCreator(ActionTypes.RESET_EVENT_DATA);
 
-export let setEditorEvent = (data) => {
-  return { type: ActionTypes.SET_EDITOR_EVENT, value: data };
-};
+export let setZoomFactor          = makeActionCreator(ActionTypes.SET_ZOOM_FACTOR, identityFunc);
+export let resetZoomFactor        = makeActionCreator(ActionTypes.RESET_ZOOM_FACTOR);
 
-export let resetEditorEvent = () => {
-  return { type: ActionTypes.RESET_EDITOR_EVENT };
-};
+export let setUpVector            = makeActionCreator(ActionTypes.SET_UP_VECTOR, identityFunc);
+export let resetUpVector          = makeActionCreator(ActionTypes.RESET_UP_VECTOR);
 
-export let setEventData = (type, position, otherData = {}) => {
-  return { type: ActionTypes.SET_EVENT_DATA, value: {type, startData: Object.assign(otherData, {position}) } };
-};
+export let setOrigin              = makeActionCreator(ActionTypes.SET_ORIGIN, identityFunc);
+export let resetOrigin            = makeActionCreator(ActionTypes.RESET_ORIGIN);
 
-export let resetEventData = () => {
-  return { type: ActionTypes.RESET_EVENT_DATA };
+let canvasDimensionsMap = (width, height) => {
+  return {width, height};
 };
+export let setCanvasDimensions    = makeActionCreator(ActionTypes.SET_CANVAS_DIMENSIONS, canvasDimensionsMap);
 
-export let setZoomFactor = (zoomFactor) => {
-  return { type: ActionTypes.SET_ZOOM_FACTOR, value: zoomFactor };
-};
 
-export let resetZoomFactor = () => {
-  return { type: ActionTypes.RESET_ZOOM_FACTOR };
-};
+export let setShowViewer          = makeActionCreator(ActionTypes.SET_SHOW_VIEWER, identityFunc);
+export let resetShowViewer        = makeActionCreator(ActionTypes.RESET_SHOW_VIEWER);
 
-export let setUpVector = (upVector) => {
-  return { type: ActionTypes.SET_UP_VECTOR, value: upVector };
-};
+export let setModelName           = makeActionCreator(ActionTypes.SET_MODEL_NAME, identityFunc);
+export let resetModelName         = makeActionCreator(ActionTypes.RESET_MODEL_NAME);
 
-export let resetUpVector = () => {
-  return { type: ActionTypes.RESET_UP_VECTOR };
-};
+export let setModelThumbnail      = makeActionCreator(ActionTypes.SET_MODEL_THUMBNAIL, identityFunc);
+export let resetModelThumbnail    = makeActionCreator(ActionTypes.RESET_MODEL_THUMBNAIL);
 
-export let setOrigin = (origin) => {
-  return { type: ActionTypes.SET_ORIGIN, value: origin };
-};
-
-export let resetOrigin = () => {
-  return { type: ActionTypes.RESET_ORIGIN };
-};
-
-export let setCanvasDimensions = (width, height) => {
-  return { type: ActionTypes.SET_CANVAS_DIMENSIONS, value: {width, height} };
-};
-
-export let setShowViewer = (show) => {
-  return { type: ActionTypes.SET_SHOW_VIEWER, value: show };
-};
-
-export let resetShowViewer = () => {
-  return { type: ActionTypes.RESET_SHOW_VIEWER };
-};
-
-export let setModelName = (name) => {
-  return { type: ActionTypes.SET_MODEL_NAME, value: name };
-};
-
-export let resetModelName = () => {
-  return { type: ActionTypes.RESET_MODEL_NAME };
-};
-
-export let setModelThumbnail = (thumbnail) => {
-  return { type: ActionTypes.SET_MODEL_THUMBNAIL, value: thumbnail };
-};
-
-export let resetModelThumbnail = () => {
-  return { type: ActionTypes.RESET_MODEL_THUMBNAIL };
-};
-
-export let setModelDownloadUrl = (url) => {
-  return { type: ActionTypes.SET_MODEL_DOWNLOADURL, value: url };
-};
-
-export let resetModelDownloadUrl = () => {
-  return { type: ActionTypes.RESET_MODEL_DOWNLOADURL };
-};
+export let setModelDownloadUrl    = makeActionCreator(ActionTypes.SET_MODEL_DOWNLOADURL, identityFunc);
+export let resetModelDownloadUrl  = makeActionCreator(ActionTypes.RESET_MODEL_DOWNLOADURL);
