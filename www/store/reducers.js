@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux';
 import * as ActionTypes from './action_types';
 
-let documentElementsReducer = (state, action) => {
+let permanentElementsReducer = (state, action) => {
   let init = [];
-  if (action.type === ActionTypes.ADD_DOCUMENT_ELEMENTS) {
+  if (action.type === ActionTypes.ADD_PERMANENT_ELEMENTS) {
     return state.concat(action.value);
-  } else if (action.type === ActionTypes.RESET_DOCUMENT_ELEMENTS) {
+  } else if (action.type === ActionTypes.RESET_PERMANENT_ELEMENTS) {
     return init;
   }
   return state || init;
@@ -109,11 +109,11 @@ let canvasDimensionsReducer = (state, action) => {
   return state || init;
 };
 
-let showModelReducer = (state, action) => {
+let showViewerReducer = (state, action) => {
   let init = false;
-  if (action.type === ActionTypes.SET_SHOW_MODEL) {
+  if (action.type === ActionTypes.SET_SHOW_VIEWER) {
     return action.value;
-  } else if (action.type === ActionTypes.RESET_SHOW_MODEL) {
+  } else if (action.type === ActionTypes.RESET_SHOW_VIEWER) {
     return init;
   }
   return state || init;
@@ -151,7 +151,7 @@ let modelDownloadUrlReducer = (state, action) => {
 
 let reducers = combineReducers({
   elementsData: combineReducers({
-    permanent: documentElementsReducer,
+    permanent: permanentElementsReducer,
     temporary: temporaryElementsReducer
   }),
 
@@ -161,7 +161,7 @@ let reducers = combineReducers({
     element: editorElemReducer,
     curve: editorCurveReducer,
     points: editorPointsReducer,
-    event: editorEventReducer,
+    event: editorEventReducer
   }),
 
   transformData: combineReducers({
@@ -173,7 +173,7 @@ let reducers = combineReducers({
   canvasDimensions: canvasDimensionsReducer,
 
   modelData: combineReducers({
-    showViewer: showModelReducer,
+    showViewer: showViewerReducer,
     name: modelNameReducer,
     thumbnail: modelThumbnailReducer,
     downloadUrl: modelDownloadUrlReducer

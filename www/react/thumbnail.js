@@ -59,7 +59,7 @@ class Thumbnail extends React.Component {
   };
 
   onShowModel () {
-    this.props.actions.setShowModel(true);
+    this.props.actions.setShowViewer(true);
   };
 
   getComponent () {

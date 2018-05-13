@@ -27,7 +27,7 @@ class Editor extends React.Component {
     if (!event) return false;
 
     if ((event.type === 'chain') && (!this.props.needsLoop)) {
-      this.props.actions.addDocumentElements(this.generateElements(false));
+      this.props.actions.addPermanentElements(this.generateElements(false));
       let points = this.props.points.slice();
       this.editorReset();
       this.props.actions.addEditorPoints([points[points.length-1]]);
@@ -35,7 +35,7 @@ class Editor extends React.Component {
     }
 
     if (event.type === 'done') {
-      this.props.actions.addDocumentElements(this.generateElements(false));
+      this.props.actions.addPermanentElements(this.generateElements(false));
       this.editorReset();
       return true;
     }

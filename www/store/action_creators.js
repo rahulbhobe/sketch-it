@@ -1,11 +1,11 @@
 import * as ActionTypes from './action_types';
 
-export let addDocumentElements = (elements) => {
-  return { type: ActionTypes.ADD_DOCUMENT_ELEMENTS, value: elements };
+export let addPermanentElements = (elements) => {
+  return { type: ActionTypes.ADD_PERMANENT_ELEMENTS, value: elements };
 };
 
-export let resetDocumentElements = () => {
-  return { type: ActionTypes.RESET_DOCUMENT_ELEMENTS };
+export let resetPermanentElements = () => {
+  return { type: ActionTypes.RESET_PERMANENT_ELEMENTS };
 };
 
 export let setTemporaryElements = (elements) => {
@@ -84,12 +84,12 @@ export let setCanvasDimensions = (width, height) => {
   return { type: ActionTypes.SET_CANVAS_DIMENSIONS, value: {width, height} };
 };
 
-export let setShowModel = (show) => {
-  return { type: ActionTypes.SET_SHOW_MODEL, value: show };
+export let setShowViewer = (show) => {
+  return { type: ActionTypes.SET_SHOW_VIEWER, value: show };
 };
 
-export let resetShowModel = () => {
-  return { type: ActionTypes.RESET_SHOW_MODEL };
+export let resetShowViewer = () => {
+  return { type: ActionTypes.RESET_SHOW_VIEWER };
 };
 
 export let setModelName = (name) => {
