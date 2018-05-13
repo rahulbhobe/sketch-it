@@ -1,5 +1,4 @@
 import request from 'request';
-import download from 'download-in-browser';
 import isUrl from 'is-url';
 import {promisify} from 'es6-promisify';
 
@@ -21,11 +20,6 @@ class RequestUtils {
     return promisify(request.post)({url, json: payload}).then((httpResponse) => {
       return httpResponse.body;
     });
-  };
-
-  static downloadFile (route) {
-    let url = this.getUrl(route);
-    return download(url);
   };
 };
 
