@@ -9,7 +9,6 @@ class Thumbnail extends React.Component {
     super(props);
     this.onTranslateModel = this.onTranslateModel.bind(this);
     this.onShowModel = this.onShowModel.bind(this);
-    this.onDownloadModel = this.onDownloadModel.bind(this);
   };
 
   delay (ms) {
@@ -34,6 +33,12 @@ class Thumbnail extends React.Component {
     this.props.actions.resetModelThumbnail();
     this.getThumbnailLoop().then(({thumbnail}) => {
       this.props.actions.setModelThumbnail(thumbnail);
+    }).then(_ => {
+      let qs = {fileId: this.props.modelName};
+      return RequestUtils.getRequest('/download', qs);
+    }).then(data => {
+      if (!data.found) return;
+      this.props.actions.setModelDownloadUrl(data.signedUrl);
     });
   };
 
@@ -57,16 +62,7 @@ class Thumbnail extends React.Component {
     this.props.actions.setShowModel(true);
   };
 
-  onDownloadModel () {
-    let qs = {fileId: this.props.modelName};
-    RequestUtils.getRequest('/download', qs).then(data => {
-      if (!data.found) return;
-      RequestUtils.downloadFile(data.signedUrl);
-    });
-  };
-
   getComponent () {
-    let {showModel} = this.props;
     if (!this.props.modelName) {
       return (<div className={classNames('tn-button', 'tn-button-green')} onClick={this.onTranslateModel}>
         <span className='tn-button-span'>
@@ -79,9 +75,15 @@ class Thumbnail extends React.Component {
           Waiting for translation
         </span>
       </div>);
-    } else if (this.props.modelThumbnail) {
-      return (<div className={classNames('tn-button')}>
-        <img className={classNames('tn-button-image')} src={'data:image/png;base64,' + this.props.modelThumbnail} onClick={showModel ? this.onDownloadModel : this.onShowModel}/>
+    } else if (!this.props.showModel) {
+      return (<div className={classNames('tn-button', 'tn-button-image')}>
+        <img src={'data:image/png;base64,' + this.props.modelThumbnail} onClick={this.onShowModel}/>
+      </div>);
+    } else {
+      return (<div className={classNames('tn-button', 'tn-button-image')}>
+        <a href={this.props.modelDownloadUrl}>
+          <img src={'data:image/png;base64,' + this.props.modelThumbnail} />
+        </a>
       </div>);
     }
 
@@ -101,6 +103,7 @@ let mapStateToProps = (state, ownProps) => {
     documentElements: state.documentElements,
     modelName: state.modelName,
     modelThumbnail: state.modelThumbnail,
+    modelDownloadUrl: state.modelDownloadUrl,
     showModel: state.showModel
   };
 };
