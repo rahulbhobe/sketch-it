@@ -150,21 +150,34 @@ let modelDownloadUrlReducer = (state, action) => {
 };
 
 let reducers = combineReducers({
-  documentElements: documentElementsReducer,
-  temporaryElements: temporaryElementsReducer,
-  editorElem: editorElemReducer,
-  editorCurve: editorCurveReducer,
-  editorPoints: editorPointsReducer,
-  editorEvent: editorEventReducer,
+  elementsData: combineReducers({
+    permanent: documentElementsReducer,
+    temporary: temporaryElementsReducer
+  }),
+
   eventData: eventDataReducer,
-  zoomFactor: zoomFactorReducer,
-  upVector: upVectorReducer,
-  origin: originReducer,
+
+  editorData: combineReducers({
+    element: editorElemReducer,
+    curve: editorCurveReducer,
+    points: editorPointsReducer,
+    event: editorEventReducer,
+  }),
+
+  transformData: combineReducers({
+    zoomFactor: zoomFactorReducer,
+    upVector: upVectorReducer,
+    origin: originReducer,
+  }),
+
   canvasDimensions: canvasDimensionsReducer,
-  showModel: showModelReducer,
-  modelName: modelNameReducer,
-  modelThumbnail: modelThumbnailReducer,
-  modelDownloadUrl: modelDownloadUrlReducer
+
+  modelData: combineReducers({
+    showViewer: showModelReducer,
+    name: modelNameReducer,
+    thumbnail: modelThumbnailReducer,
+    downloadUrl: modelDownloadUrlReducer
+  }),
 });
 
 export default reducers;

@@ -62,12 +62,12 @@ class Canvas extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    zoomFactor: state.zoomFactor,
-    upVector: state.upVector,
-    origin: state.origin,
+    zoomFactor: state.transformData.zoomFactor,
+    upVector: state.transformData.upVector,
+    origin: state.transformData.origin,
     canvasDimensions: state.canvasDimensions,
-    documentElements: state.documentElements,
-    temporaryElements: state.temporaryElements
+    documentElements: state.elementsData.permanent,
+    temporaryElements: state.elementsData.temporary
   };
 };
 

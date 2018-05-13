@@ -100,11 +100,11 @@ class Thumbnail extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    documentElements: state.documentElements,
-    modelName: state.modelName,
-    modelThumbnail: state.modelThumbnail,
-    modelDownloadUrl: state.modelDownloadUrl,
-    showModel: state.showModel
+    documentElements: state.elementsData.permanent,
+    modelName: state.modelData.name,
+    modelThumbnail: state.modelData.thumbnail,
+    modelDownloadUrl: state.modelData.downloadUrl,
+    showModel: state.modelData.showViewer
   };
 };
 

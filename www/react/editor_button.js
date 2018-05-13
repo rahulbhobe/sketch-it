@@ -30,7 +30,7 @@ class EditorButton extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    active: state.editorElem === ownProps.type,
+    active: state.editorData.element === ownProps.type,
   };
 };
 

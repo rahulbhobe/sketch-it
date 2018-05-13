@@ -46,7 +46,7 @@ class SideBar extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    editorElem: state.editorElem,
+    editorElem: state.editorData.element,
   };
 };
 

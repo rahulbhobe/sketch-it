@@ -101,10 +101,10 @@ class CanvasEvents extends React.Component {
 
     if (!event.shiftKey) {
       dataType = 'pan';
-      data.origin = store.getState().origin;
+      data.origin = store.getState().transformData.origin;
     } else {
       dataType = 'rotate';
-      data.upVector = store.getState().upVector;
+      data.upVector = store.getState().transformData.upVector;
     }
 
     this.props.actions.setEventData(dataType, this.getPositionAtEvent(event, false), data);
@@ -153,7 +153,7 @@ class CanvasEvents extends React.Component {
     let dataType  = 'none';
     let data      = {};
     let wheelDistance = Math.round(event.wheelDeltaY/30);
-    let zoomFactor    = store.getState().zoomFactor + wheelDistance;
+    let zoomFactor    = store.getState().transformData.zoomFactor + wheelDistance;
     if (zoomFactor < 25) {
       zoomFactor = 25;
     } else if (zoomFactor > 400) {
@@ -162,13 +162,13 @@ class CanvasEvents extends React.Component {
 
     if (wheelDistance > 0) {
       dataType = 'zoomin';
-      data.zoomFactor = store.getState().zoomFactor;
+      data.zoomFactor = store.getState().transformData.zoomFactor;
     } else if (wheelDistance < 0) {
       dataType = 'zoomout';
-      data.zoomFactor = store.getState().zoomFactor;
+      data.zoomFactor = store.getState().transformData.zoomFactor;
     }
 
-    if (zoomFactor !== store.getState().zoomFactor) {
+    if (zoomFactor !== store.getState().transformData.zoomFactor) {
       this.props.actions.setEventData(dataType, this.getPositionAtEvent(event, false), data);
       this.props.actions.setZoomFactor(zoomFactor);
     }
@@ -245,16 +245,16 @@ class CanvasEvents extends React.Component {
   };
 
   handleEditorEvent (event, type) {
-    let {editorElem} = store.getState();
-    if (editorElem==='none') return;
+    let {element} = store.getState().editorData;
+    if (element==='none') return;
     let point          = this.createVectorInModelCoordinates(this.getPositionAtEvent(event, true)).asObj();
     let screenToModel  = TransformUtils.getScreenToModel();
     this.props.actions.setEditorEvent({type, point, screenToModel});
   };
 
   finishEditor () {
-    let {editorElem} = store.getState();
-    if (!editorElem) return;
+    let {element} = store.getState().editorData;
+    if (element==='none') return;
     this.props.actions.setEditorEvent({type: 'done'});
     this.props.actions.resetEditorElem();
     this.props.actions.resetEditorCurve();

@@ -42,7 +42,7 @@ class Viewer extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    modelName: state.modelName
+    modelName: state.modelData.name
   };
 };
 

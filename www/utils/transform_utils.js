@@ -4,7 +4,8 @@ import store from '../store/store';
 class TransformUtils {
   static getModelToScreen () {
     let matrixTransforms = MatrixTransformations.create();
-    let {origin, zoomFactor, upVector, canvasDimensions} = store.getState();
+    let {transformData, canvasDimensions} = store.getState();
+    let {origin, zoomFactor, upVector} = transformData;
 
     let negOrg = Vector.create(origin.x, origin.y).negate();
     matrixTransforms.append(m => m.translate(negOrg));

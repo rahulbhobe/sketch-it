@@ -77,9 +77,9 @@ class Editor extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    points: state.editorPoints,
-    length: state.editorPoints.length,
-    event: state.editorEvent
+    points: state.editorData.points,
+    length: state.editorData.points.length,
+    event: state.editorData.event
   };
 };
 

@@ -31,7 +31,7 @@ class SketchIt extends React.Component {
 
 let mapStateToProps = (state, ownProps) => {
   return {
-    showModel: state.showModel,
+    showModel: state.modelData.showViewer,
   };
 };
 
