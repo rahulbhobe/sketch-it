@@ -139,6 +139,16 @@ let modelThumbnailReducer = (state, action) => {
   return state || init;
 };
 
+let modelDownloadUrlReducer = (state, action) => {
+  let init = '';
+  if (action.type === ActionTypes.SET_MODEL_DOWNLOADURL) {
+    return action.value;
+  } else if (action.type === ActionTypes.RESET_MODEL_DOWNLOADURL) {
+    return init;
+  }
+  return state || init;
+};
+
 let reducers = combineReducers({
   documentElements: documentElementsReducer,
   temporaryElements: temporaryElementsReducer,
@@ -153,7 +163,8 @@ let reducers = combineReducers({
   canvasDimensions: canvasDimensionsReducer,
   showModel: showModelReducer,
   modelName: modelNameReducer,
-  modelThumbnail: modelThumbnailReducer
+  modelThumbnail: modelThumbnailReducer,
+  modelDownloadUrl: modelDownloadUrlReducer
 });
 
 export default reducers;

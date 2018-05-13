@@ -107,3 +107,11 @@ export let setModelThumbnail = (thumbnail) => {
 export let resetModelThumbnail = () => {
   return { type: ActionTypes.RESET_MODEL_THUMBNAIL };
 };
+
+export let setModelDownloadUrl = (url) => {
+  return { type: ActionTypes.SET_MODEL_DOWNLOADURL, value: url };
+};
+
+export let resetModelDownloadUrl = () => {
+  return { type: ActionTypes.RESET_MODEL_DOWNLOADURL };
+};

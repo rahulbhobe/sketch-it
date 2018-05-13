@@ -25,3 +25,5 @@ export const SET_MODEL_NAME                     = 'SET_MODEL_NAME';
 export const RESET_MODEL_NAME                   = 'RESET_MODEL_NAME';
 export const SET_MODEL_THUMBNAIL                = 'SET_MODEL_THUMBNAIL';
 export const RESET_MODEL_THUMBNAIL              = 'RESET_MODEL_THUMBNAIL';
+export const SET_MODEL_DOWNLOADURL              = 'SET_MODEL_DOWNLOADURL';
+export const RESET_MODEL_DOWNLOADURL            = 'RESET_MODEL_DOWNLOADURL';
