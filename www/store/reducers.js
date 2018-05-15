@@ -1,153 +1,94 @@
 import {combineReducers} from 'redux';
+import {handleActions} from 'redux-actions';
 import * as ActionTypes from './action_types';
 
-let permanentElementsReducer = (state, action) => {
-  let init = [];
-  if (action.type === ActionTypes.ADD_PERMANENT_ELEMENTS) {
-    return state.concat(action.payload);
-  } else if (action.type === ActionTypes.RESET_PERMANENT_ELEMENTS) {
-    return init;
-  }
-  return state || init;
+let createReducer = (actionsMap, defaultState) => {
+  let actionsMapLocal = {};
+  Object.keys(actionsMap).map((key) => {
+    let val = actionsMap[key];
+    if (val === 'default')
+      actionsMapLocal[key] = (state, action) => defaultState;
+    else if (val === 'payload')
+      actionsMapLocal[key] = (state, action) => action.payload;
+    else
+      actionsMapLocal[key] = val;
+  });
+  return handleActions(actionsMapLocal, defaultState);
 };
 
-let temporaryElementsReducer = (state, action) => {
-  let init = [];
-  if (action.type === ActionTypes.SET_TEMPORARY_ELEMENTS) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_TEMPORARY_ELEMENTS) {
-    return init;
-  }
-  return state || init;
-};
+let permanentElementsReducer = createReducer({
+  [ActionTypes.ADD_PERMANENT_ELEMENTS]:   (state, action) => state.concat(action.payload),
+  [ActionTypes.RESET_PERMANENT_ELEMENTS]: 'default'
+}, []);
 
-let editorElemReducer = (state, action) => {
-  let init = 'none';
-  if (action.type === ActionTypes.SET_EDITOR_ELEM) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_EDITOR_ELEM) {
-    return init;
-  }
-  return state || init;
-};
+let temporaryElementsReducer = createReducer({
+  [ActionTypes.SET_TEMPORARY_ELEMENTS]:   'payload',
+  [ActionTypes.RESET_TEMPORARY_ELEMENTS]: 'default'
+}, []);
 
-let editorCurveReducer = (state, action) => {
-  let init = 'none';
-  if (action.type === ActionTypes.SET_EDITOR_CURVE) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_EDITOR_CURVE) {
-    return init;
-  }
-  return state || init;
-};
+let editorElemReducer = createReducer({
+  [ActionTypes.SET_EDITOR_ELEM]:   'payload',
+  [ActionTypes.RESET_EDITOR_ELEM]: 'default'
+}, 'none');
 
-let editorPointsReducer = (state, action) => {
-  let init = [];
-  if (action.type === ActionTypes.ADD_EDITOR_POINTS) {
-    return state.concat(action.payload);
-  } else if (action.type === ActionTypes.RESET_EDITOR_POINTS) {
-    return init;
-  }
-  return state || init;
-};
+let editorCurveReducer = createReducer({
+  [ActionTypes.SET_EDITOR_CURVE]:   'payload',
+  [ActionTypes.RESET_EDITOR_CURVE]: 'default'
+}, 'none');
 
-let editorEventReducer = (state, action) => {
-  let init = null;
-  if (action.type === ActionTypes.SET_EDITOR_EVENT) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_EDITOR_EVENT) {
-    return init;
-  }
-  return state || init;
-};
+let editorPointsReducer = createReducer({
+  [ActionTypes.ADD_EDITOR_POINTS]:   (state, action) => state.concat(action.payload),
+  [ActionTypes.RESET_EDITOR_POINTS]: 'default'
+}, []);
 
-let eventDataReducer = (state, action) => {
-  let init = {type: 'none', startData: null};
-  if (action.type === ActionTypes.SET_EVENT_DATA) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_EVENT_DATA) {
-    return init;
-  }
-  return state || init;
-};
+let editorEventReducer = createReducer({
+  [ActionTypes.SET_EDITOR_EVENT]:   'payload',
+  [ActionTypes.RESET_EDITOR_EVENT]: 'default'
+}, null);
 
-let zoomFactorReducer = (state, action) => {
-  let init = 100;
-  if (action.type === ActionTypes.SET_ZOOM_FACTOR) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_ZOOM_FACTOR) {
-    return init;
-  }
-  return state || init;
-};
+let eventDataReducer = createReducer({
+  [ActionTypes.SET_EVENT_DATA]:   'payload',
+  [ActionTypes.RESET_EVENT_DATA]: 'default'
+}, {type: 'none', startData: null});
 
-let upVectorReducer = (state, action) => {
-  let init = {x:0, y:1};
-  if (action.type === ActionTypes.SET_UP_VECTOR) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_UP_VECTOR) {
-    return init;
-  }
-  return state || init;
-};
+let zoomFactorReducer = createReducer({
+  [ActionTypes.SET_ZOOM_FACTOR]:   'payload',
+  [ActionTypes.RESET_ZOOM_FACTOR]: 'default'
+}, 100);
 
-let originReducer = (state, action) => {
-  let init = {x:0, y:0};
-  if (action.type === ActionTypes.SET_ORIGIN) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_ORIGIN) {
-    return init;
-  }
-  return state || init;
-};
+let upVectorReducer = createReducer({
+  [ActionTypes.SET_UP_VECTOR]:   'payload',
+  [ActionTypes.RESET_UP_VECTOR]: 'default'
+}, {x:0, y:1});
 
-let canvasDimensionsReducer = (state, action) => {
-  let init = {width:-1, height:-1};
-  if (action.type === ActionTypes.SET_CANVAS_DIMENSIONS) {
-    return action.payload;
-  }
-  return state || init;
-};
+let originReducer = createReducer({
+  [ActionTypes.SET_ORIGIN]:   'payload',
+  [ActionTypes.RESET_ORIGIN]: 'default'
+}, {x:0, y:0});
 
-let showViewerReducer = (state, action) => {
-  let init = false;
-  if (action.type === ActionTypes.SET_SHOW_VIEWER) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_SHOW_VIEWER) {
-    return init;
-  }
-  return state || init;
-};
+let canvasDimensionsReducer = createReducer({
+  [ActionTypes.SET_CANVAS_DIMENSIONS]: 'payload'
+}, {width:-1, height:-1});
 
-let modelNameReducer = (state, action) => {
-  let init = '';
-  if (action.type === ActionTypes.SET_MODEL_NAME) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_MODEL_NAME) {
-    return init;
-  }
-  return state || init;
-};
+let showViewerReducer = createReducer({
+  [ActionTypes.SET_SHOW_VIEWER]:   'payload',
+  [ActionTypes.RESET_SHOW_VIEWER]: 'default'
+}, false);
 
-let modelThumbnailReducer = (state, action) => {
-  let init = '';
-  if (action.type === ActionTypes.SET_MODEL_THUMBNAIL) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_MODEL_THUMBNAIL) {
-    return init;
-  }
-  return state || init;
-};
+let modelNameReducer = createReducer({
+  [ActionTypes.SET_MODEL_NAME]:   'payload',
+  [ActionTypes.RESET_MODEL_NAME]: 'default'
+}, '');
 
-let modelDownloadUrlReducer = (state, action) => {
-  let init = '';
-  if (action.type === ActionTypes.SET_MODEL_DOWNLOADURL) {
-    return action.payload;
-  } else if (action.type === ActionTypes.RESET_MODEL_DOWNLOADURL) {
-    return init;
-  }
-  return state || init;
-};
+let modelThumbnailReducer = createReducer({
+  [ActionTypes.SET_MODEL_THUMBNAIL]:   'payload',
+  [ActionTypes.RESET_MODEL_THUMBNAIL]: 'default'
+}, '');
+
+let modelDownloadUrlReducer = createReducer({
+  [ActionTypes.SET_MODEL_DOWNLOADURL]:   'payload',
+  [ActionTypes.RESET_MODEL_DOWNLOADURL]: 'default'
+}, '');
 
 let reducers = combineReducers({
   elementsData: combineReducers({
@@ -177,7 +118,7 @@ let reducers = combineReducers({
     name: modelNameReducer,
     thumbnail: modelThumbnailReducer,
     downloadUrl: modelDownloadUrlReducer
-  }),
+  })
 });
 
 export default reducers;
