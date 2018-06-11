@@ -6,6 +6,7 @@ import ForgeSDK from 'forge-apis';
 import base64 from 'base-64';
 import ForgeUtils from './forge_utils';
 import NgrokUtils from './ngrok_utils';
+import SocketUtils from './socket_utils';
 import AppUtils from './app_utils';
 
 let app =  express();
@@ -74,6 +75,7 @@ app.post('/translationcomplete', (req, res) => {
     return ForgeUtils.getThumbnail(urn);
   }).then(thumbnail => {
     AppUtils.setThumbnail(fileId, thumbnail);
+    SocketUtils.emit(fileId);
   });
 
   console.log('success', '- translated ' + fileId)
@@ -116,13 +118,14 @@ app.post('/create', (req, res) => {
   res.json({fileId});
 });
 
-let port = process.env.PORT || 3000;
 
-app.set('port', port);
+app.set('port', process.env.PORT || 3000);
 
 let server = app.listen(app.get('port'), () => {
   console.log('Server listening on port ' + server.address().port);
 });
 
+
 ForgeUtils.init();
-NgrokUtils.init(port);
+NgrokUtils.init(app.get('port'));
+SocketUtils.init(server);

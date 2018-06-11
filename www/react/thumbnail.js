@@ -1,6 +1,7 @@
 import React from 'react';
 import ReduxUtils from '../utils/redux_utils';
 import RequestUtils from '../utils/request_utils';
+import io from 'socket.io-client';
 import base64 from 'base-64';
 import classNames from 'classnames';
 
@@ -11,27 +12,14 @@ class Thumbnail extends React.Component {
     this.onShowModel = this.onShowModel.bind(this);
   };
 
-  delay (ms) {
-    return new Promise(_ => setTimeout(_, ms || 5000));
-  };
-
   getThumbnail () {
     let qs = {fileId: this.props.modelName};
     return RequestUtils.getRequest('/thumbnail', qs);
   };
 
-  getThumbnailLoop () {
-    return this.getThumbnail().then(data => {
-      if (data.found) {
-        return Promise.resolve(data);
-      }
-      return this.delay().then(_ => this.getThumbnailLoop());
-    });
-  };
-
   updateThumbnail () {
     this.props.actions.resetModelThumbnail();
-    this.getThumbnailLoop().then(({thumbnail}) => {
+    this.getThumbnail().then(({thumbnail}) => {
       this.props.actions.setModelThumbnail(thumbnail);
     }).then(_ => {
       let qs = {fileId: this.props.modelName};
@@ -54,7 +42,11 @@ class Thumbnail extends React.Component {
     RequestUtils.postRequest('/create', {elements})
                 .then(({fileId}) => {
                   this.props.actions.setModelName(fileId);
-                  this.updateThumbnail();
+                  this.props.actions.resetModelThumbnail();
+                  let socket = io.connect('/').on(fileId, _ => {
+                    socket.disconnect();
+                    this.updateThumbnail();
+                  });
                 });
   };
 

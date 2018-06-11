@@ -1,7 +1,4 @@
 import ngrok from 'ngrok';
-import request from 'request';
-import base64 from 'base-64';
-import {promisify} from 'es6-promisify';
 
 class NgrokUtils {
   static _url = null;
