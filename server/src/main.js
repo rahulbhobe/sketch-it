@@ -3,8 +3,10 @@ import bodyParser from 'body-parser';
 import favicon from 'serve-favicon';
 import shortid from 'shortid';
 import ForgeSDK from 'forge-apis';
-import ForgeUtils from './forge_utils';
 import base64 from 'base-64';
+import ForgeUtils from './forge_utils';
+import NgrokUtils from './ngrok_utils';
+import AppUtils from './app_utils';
 
 let app =  express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -40,13 +42,8 @@ app.get('/token', (req, res) => {
 
 app.get('/thumbnail', (req, res) => {
   let {fileId} = req.query;
-  ForgeUtils.getDerivatives(fileId).then(_ => {
-    return ForgeUtils.getThumbnail(fileId);
-  }).then(thumbnail => {
-    res.json({found: true,  thumbnail});
-  }).catch(_ => {
-    res.json({found: false, thumbnail: ''});
-  });
+  let thumbnail = AppUtils.getThumbnail(fileId);
+  res.json({found: thumbnail!=='',  thumbnail});
 });
 
 app.get('/download', (req, res) => {
@@ -58,11 +55,39 @@ app.get('/download', (req, res) => {
   });
 });
 
+app.post('/workitemcomplete', (req, res) => {
+  let {status, id} = req.body;
+  let fileId = AppUtils.getFileId(id);
+  console.log(status, '- generated ' + fileId)
+  if (status === 'success') {
+    ForgeUtils.translate(fileId);
+  }
+  res.json({status, id, fileId});
+});
+
+app.post('/translationcomplete', (req, res) => {
+  let {hook, payload} = req.body;
+  let urn = payload.URN;
+  let fileId = base64.decode(urn).replace('urn:adsk.objects:os.object:' + ForgeUtils.BUCKET_KEY + '/', '');
+
+  ForgeUtils.deleteWebhook(hook.__self__).then(_ => {
+    return ForgeUtils.getThumbnail(urn);
+  }).then(thumbnail => {
+    AppUtils.setThumbnail(fileId, thumbnail);
+  });
+
+  console.log('success', '- translated ' + fileId)
+  res.sendStatus(200);
+});
+
 app.post('/create', (req, res) => {
   let {elements} = req.body;
   let fileId = shortid.generate() + '.rvt';
+  AppUtils.addJobDetails(fileId);
 
-  ForgeUtils.createEmptyResource(fileId).then(_ => {
+  ForgeUtils.createWebhook().then(_ => {
+    ForgeUtils.createEmptyResource(fileId);
+  }).then(_ => {
     return ForgeUtils.createSignedResource(fileId, 'write');
   }).then(signedUrl => {
     let payLoad = {
@@ -71,8 +96,12 @@ app.post('/create', (req, res) => {
         sketchItInput: {
           url: 'data:application/json,'+JSON.stringify(elements)
         },
+        onComplete: {
+          verb: 'post',
+          url: NgrokUtils._url + '/workitemcomplete'
+        },
         result: {
-          'verb': 'put',
+          verb: 'put',
           url: signedUrl
         }
       }
@@ -80,24 +109,20 @@ app.post('/create', (req, res) => {
     return ForgeUtils.postWorkitem(payLoad);
   }).then(id => {
     console.log('posted -', id);
-    return ForgeUtils.getWorkitemStatusLoop(id);
-  }).then(status => {
-    console.log(status, '- generated ' + fileId);
-    return ForgeUtils.translate(fileId);
-  }).then(() => {
-    return ForgeUtils.getDerivativesLoop(fileId);
-  }).then(status => {
-    console.log(status, '- translated ' + fileId);
+    AppUtils.setWorkitemId(fileId, id);
   }).catch(err => {
     console.log(err)
   });
   res.json({fileId});
 });
 
-app.set('port', process.env.PORT || 3000);
+let port = process.env.PORT || 3000;
+
+app.set('port', port);
 
 let server = app.listen(app.get('port'), () => {
   console.log('Server listening on port ' + server.address().port);
 });
 
 ForgeUtils.init();
+NgrokUtils.init(port);

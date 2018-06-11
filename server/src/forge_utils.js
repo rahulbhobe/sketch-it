@@ -1,9 +1,11 @@
 import ForgeSDK from 'forge-apis';
 import request from 'request';
 import base64 from 'base-64';
+import NgrokUtils from './ngrok_utils';
 import {promisify} from 'es6-promisify';
 
 class ForgeUtils {
+  static FORGE_URL        = 'https://developer.api.autodesk.com';
   static DAS_URL          = 'https://developer.api.autodesk.com/da/us-east/v3';
   static CLIENT_ID        = process.env.CLIENT_ID || '';
   static CLIENT_SECRET    = process.env.CLIENT_SECRET || '';
@@ -23,10 +25,6 @@ class ForgeUtils {
     }).catch(err => {
       console.error(err);
     });
-  };
-
-  static delay (ms) {
-    return new Promise(_ => setTimeout(_, ms || this.POLLING_DELAY));
   };
 
   static getOrCreateBucket () {
@@ -55,6 +53,32 @@ class ForgeUtils {
     });
   };
 
+  static createWebhook () {
+    let params = {
+      url: this.FORGE_URL + '/webhooks/v1/systems/derivative/events/extraction.finished/hooks',
+      headers: {
+        Authorization: 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
+      },
+      json: {
+        callbackUrl: NgrokUtils._url + '/translationcomplete',
+        scope: {
+          workflow: 'my-workflow-id'
+        }
+      }
+    }
+    return promisify(request.post)(params);
+  };
+
+  static deleteWebhook (hook) {
+    let params = {
+      url: this.FORGE_URL + '/webhooks/v1' + hook,
+      headers: {
+        Authorization: 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
+      }
+    }
+    return promisify(request.delete)(params);
+  };
+
   static translate (objectName) {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
     let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
@@ -67,28 +91,14 @@ class ForgeUtils {
         }
       ]
     };
-    return DerivativesApi.translate({input, output}, {}, null, this._oAuth2TwoLegged.getCredentials());
+    let misc = {
+      workflow: 'my-workflow-id'
+    }
+    return DerivativesApi.translate({input, output, misc}, {}, null, this._oAuth2TwoLegged.getCredentials());
   };
 
-  static getDerivatives (objectName) {
+  static getThumbnail (urn) {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
-    let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
-    return DerivativesApi.getManifest(urn, {}, null, this._oAuth2TwoLegged.getCredentials())
-                         .then(({body:{status}}) => status);
-  };
-
-  static getDerivativesLoop (objectName) {
-    return this.getDerivatives(objectName).then(status => {
-      if (status!=='pending'&&status!=='inprogress') {
-        return Promise.resolve(status);
-      }
-      return this.delay().then(_ => this.getDerivativesLoop(objectName));
-    });
-  };
-
-  static getThumbnail (objectName) {
-    let DerivativesApi = new ForgeSDK.DerivativesApi();
-    let urn = base64.encode('urn:adsk.objects:os.object:' + this.BUCKET_KEY + '/' + objectName);
     return DerivativesApi.getThumbnail(urn, {}, null, this._oAuth2TwoLegged.getCredentials())
                          .then(({body}) => new Buffer(body).toString('base64'));
   };
@@ -112,15 +122,6 @@ class ForgeUtils {
       }
     };
     return promisify(request)(params).then(({body}) => JSON.parse(body).status);
-  };
-
-  static getWorkitemStatusLoop (id) {
-    return this.getWorkitemStatus(id).then(status => {
-      if (status!=='pending'&&status!=='inprogress') {
-        return Promise.resolve(status);
-      }
-      return this.delay().then(_ => this.getWorkitemStatusLoop(id));
-    });
   };
 };
 
