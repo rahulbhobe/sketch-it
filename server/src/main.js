@@ -51,7 +51,7 @@ app.get('/download', (req, res) => {
   ForgeUtils.createSignedResource(fileId).then(signedUrl => {
     res.json({found: true,  signedUrl});
   }).catch(_ => {
-    res.json({found: false, thumbnail: ''});
+    res.json({found: false, signedUrl: ''});
   });
 });
 
