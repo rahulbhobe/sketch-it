@@ -62,6 +62,7 @@ app.post('/workitemcomplete', (req, res) => {
   console.log(status, '- generated ' + fileId)
   if (status === 'success') {
     ForgeUtils.translate(fileId);
+    SocketUtils.emit(fileId, 'workitem');
   }
   res.json({status, id, fileId});
 });
@@ -75,7 +76,7 @@ app.post('/translationcomplete', (req, res) => {
     return ForgeUtils.getThumbnail(urn);
   }).then(thumbnail => {
     AppUtils.setThumbnail(fileId, thumbnail);
-    SocketUtils.emit(fileId);
+    SocketUtils.emit(fileId, 'thumbnail');
   });
 
   console.log('success', '- translated ' + fileId)

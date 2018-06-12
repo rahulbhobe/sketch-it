@@ -15,8 +15,8 @@ class SocketUtils {
     });
   };
 
-  static emit (fileId) {
-    this._sockets.forEach(socket => socket.emit(fileId));
+  static emit (fileId, msg) {
+    this._sockets.forEach(socket => socket.emit(fileId, msg));
   };
 };
 
