@@ -30,6 +30,15 @@ class Thumbnail extends React.Component {
     });
   };
 
+  onEmit (socket, msg) {
+    if (msg === 'workitem') {
+      this.props.actions.setModelWorkitemDone(true);
+    } else if (msg === 'thumbnail') {
+      socket.disconnect();
+      this.updateThumbnail();
+    }
+  };
+
   onTranslateModel () {
     let walls  = this.props.documentElements
                     .filter(elem => elem.type === 'wall')
@@ -43,10 +52,7 @@ class Thumbnail extends React.Component {
                 .then(({fileId}) => {
                   this.props.actions.setModelName(fileId);
                   this.props.actions.resetModelThumbnail();
-                  let socket = io.connect('/').on(fileId, _ => {
-                    socket.disconnect();
-                    this.updateThumbnail();
-                  });
+                  let socket = io.connect('/').on(fileId, msg => this.onEmit(socket, msg));
                 });
   };
 
@@ -61,10 +67,16 @@ class Thumbnail extends React.Component {
           Upload to Design Automation for Revit
         </span>
       </div>);
-    } else if (!this.props.modelThumbnail) {
-      return (<div className={classNames('tn-button', 'tn-button-yellow')}>
+    } else if (!this.props.modelWorkitemDone) {
+      return (<div className={classNames('tn-button', 'tn-button-yellow1')}>
         <span className='tn-button-span'>
-          Waiting for translation
+          Generating {this.props.modelName}
+        </span>
+      </div>);
+    } else if (!this.props.modelThumbnail) {
+      return (<div className={classNames('tn-button', 'tn-button-yellow2')}>
+        <span className='tn-button-span'>
+          Translating {this.props.modelName}
         </span>
       </div>);
     } else if (!this.props.showModel) {
@@ -94,6 +106,7 @@ let mapStateToProps = (state, ownProps) => {
   return {
     documentElements: state.elementsData.permanent,
     modelName: state.modelData.name,
+    modelWorkitemDone: state.modelData.workitemDone,
     modelThumbnail: state.modelData.thumbnail,
     modelDownloadUrl: state.modelData.downloadUrl,
     showModel: state.modelData.showViewer

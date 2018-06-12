@@ -121,9 +121,16 @@ html, body {
   transform: translateY(3px);
 }
 
-.tn-button-yellow {
+.tn-button-yellow1 {
   cursor: not-allowed;
-  background-color: #d2b55b;
+  color: #dd0000;
+  background-color: #c1a44a;
+}
+
+.tn-button-yellow2 {
+  cursor: not-allowed;
+  color: #dd0000;
+  background-color: #e3c66c;
 }
 
 .tn-button-image {
