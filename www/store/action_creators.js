@@ -48,6 +48,9 @@ export let resetShowViewer        = createAction(ActionTypes.RESET_SHOW_VIEWER);
 export let setModelName           = createAction(ActionTypes.SET_MODEL_NAME);
 export let resetModelName         = createAction(ActionTypes.RESET_MODEL_NAME);
 
+export let setModelWorkitemDone   = createAction(ActionTypes.SET_MODEL_WORKITEM_DONE);
+export let resetModelWorkitemDone = createAction(ActionTypes.RESET_MODEL_WORKITEM_DONE);
+
 export let setModelThumbnail      = createAction(ActionTypes.SET_MODEL_THUMBNAIL);
 export let resetModelThumbnail    = createAction(ActionTypes.RESET_MODEL_THUMBNAIL);
 

@@ -80,6 +80,11 @@ let modelNameReducer = createReducer({
   [ActionTypes.RESET_MODEL_NAME]: 'default'
 }, '');
 
+let workitemDoneReducer = createReducer({
+  [ActionTypes.SET_MODEL_WORKITEM_DONE]:   'payload',
+  [ActionTypes.RESET_MODEL_WORKITEM_DONE]: 'default'
+}, false);
+
 let modelThumbnailReducer = createReducer({
   [ActionTypes.SET_MODEL_THUMBNAIL]:   'payload',
   [ActionTypes.RESET_MODEL_THUMBNAIL]: 'default'
@@ -116,6 +121,7 @@ let reducers = combineReducers({
   modelData: combineReducers({
     showViewer: showViewerReducer,
     name: modelNameReducer,
+    workitemDone: workitemDoneReducer,
     thumbnail: modelThumbnailReducer,
     downloadUrl: modelDownloadUrlReducer
   })
