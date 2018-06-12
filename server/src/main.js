@@ -100,7 +100,7 @@ app.post('/create', (req, res) => {
         },
         onComplete: {
           verb: 'post',
-          url: NgrokUtils._url + '/workitemcomplete'
+          url: NgrokUtils.getServerUrl() + '/workitemcomplete'
         },
         result: {
           verb: 'put',

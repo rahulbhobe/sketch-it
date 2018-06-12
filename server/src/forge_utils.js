@@ -60,7 +60,7 @@ class ForgeUtils {
         Authorization: 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
       },
       json: {
-        callbackUrl: NgrokUtils._url + '/translationcomplete',
+        callbackUrl: NgrokUtils.getServerUrl() + '/translationcomplete',
         scope: {
           workflow: 'my-workflow-id'
         }
