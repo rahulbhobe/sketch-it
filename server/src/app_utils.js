@@ -37,6 +37,7 @@ class AppUtils {
     this._data.filter(d => d.thumbnail==='').forEach(({fileId}) => {
      let urn = base64.encode('urn:adsk.objects:os.object:' + ForgeUtils.BUCKET_KEY + '/' + fileId);
      ForgeUtils.getThumbnail(urn).then(thumbnail => {
+        if (!thumbnail) return;
         this.setThumbnail(fileId, thumbnail);
         SocketUtils.emit(fileId, 'thumbnail');
       });

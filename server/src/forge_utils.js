@@ -102,7 +102,8 @@ class ForgeUtils {
   static getThumbnail (urn) {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
     return DerivativesApi.getThumbnail(urn, {}, null, this._oAuth2TwoLegged.getCredentials())
-                         .then(({body}) => new Buffer(body).toString('base64'));
+                         .then(({body}) => new Buffer(body).toString('base64'))
+                         .catch(_ => '');
   };
 
   static postWorkitem(payload) {
