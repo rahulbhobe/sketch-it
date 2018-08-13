@@ -67,6 +67,7 @@ app.post('/workitemcomplete', (req, res) => {
   res.json({status, id, fileId});
 });
 
+/*
 app.post('/translationcomplete', (req, res) => {
   let {hook, payload} = req.body;
   let urn = payload.URN;
@@ -82,15 +83,20 @@ app.post('/translationcomplete', (req, res) => {
   console.log('success', '- translated ' + fileId)
   res.sendStatus(200);
 });
+*/
 
 app.post('/create', (req, res) => {
   let {elements} = req.body;
   let fileId = shortid.generate() + '.rvt';
   AppUtils.addJobDetails(fileId);
 
+/*
   ForgeUtils.createWebhook().then(_ => {
     ForgeUtils.createEmptyResource(fileId);
   }).then(_ => {
+*/
+
+  ForgeUtils.createEmptyResource(fileId).then(_ => {
     return ForgeUtils.createSignedResource(fileId, 'write');
   }).then(signedUrl => {
     let payLoad = {
@@ -128,5 +134,6 @@ let server = app.listen(app.get('port'), () => {
 
 
 ForgeUtils.init();
+AppUtils.init();
 NgrokUtils.init(app.get('port'));
 SocketUtils.init(server);

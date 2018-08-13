@@ -53,6 +53,7 @@ class ForgeUtils {
     });
   };
 
+/*
   static createWebhook () {
     let params = {
       url: this.FORGE_URL + '/webhooks/v1/systems/derivative/events/extraction.finished/hooks',
@@ -78,6 +79,7 @@ class ForgeUtils {
     }
     return promisify(request.delete)(params);
   };
+*/
 
   static translate (objectName) {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
