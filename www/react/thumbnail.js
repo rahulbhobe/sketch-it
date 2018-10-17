@@ -64,19 +64,19 @@ class Thumbnail extends React.Component {
     if (!this.props.modelName) {
       return (<div className={classNames('tn-button', 'tn-button-green')} onClick={this.onTranslateModel}>
         <span className='tn-button-span'>
-          Upload to Design Automation for Revit
+          Generate Revit model
         </span>
       </div>);
     } else if (!this.props.modelWorkitemDone) {
       return (<div className={classNames('tn-button', 'tn-button-yellow1')}>
         <span className='tn-button-span'>
-          Generating {this.props.modelName}
+          Creating {this.props.modelName}
         </span>
       </div>);
     } else if (!this.props.modelThumbnail) {
       return (<div className={classNames('tn-button', 'tn-button-yellow2')}>
         <span className='tn-button-span'>
-          Translating {this.props.modelName}
+          Publishing {this.props.modelName}
         </span>
       </div>);
     } else if (!this.props.showModel) {
