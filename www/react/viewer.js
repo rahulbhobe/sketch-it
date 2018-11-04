@@ -25,7 +25,7 @@ class Viewer extends React.Component {
             console.error('Document contains no viewables.');
             return;
           }
-          viewerApp.selectItem(viewables[0].data, null, console.error);
+          viewerApp.selectItem(viewables[0], null, console.error);
         }, console.error);
       });
     });
