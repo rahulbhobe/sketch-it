@@ -7,8 +7,12 @@ class NgrokUtils {
     return this._url;
   };
 
+  static isLocalUrl () {
+    return !process.env.THIS_URL;
+  };
+
   static init (port) {
-    NgrokUtils.generateUrl(port).then(url => {
+    return NgrokUtils.generateUrl(port).then(url => {
       this._url = url;
       console.log(url);
     });

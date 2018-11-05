@@ -6,7 +6,7 @@ class AppUtils {
   static _data = [];
 
   static init () {
-    setInterval(_ => this.getMissingThumbnails(), 3000);
+    // setInterval(_ => this.getMissingThumbnails(), 3000);
   };
 
   static addJobDetails (fileId) {

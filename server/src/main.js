@@ -67,15 +67,12 @@ app.post('/workitemcomplete', (req, res) => {
   res.json({status, id, fileId});
 });
 
-/*
 app.post('/translationcomplete', (req, res) => {
   let {hook, payload} = req.body;
   let urn = payload.URN;
   let fileId = base64.decode(urn).replace('urn:adsk.objects:os.object:' + ForgeUtils.BUCKET_KEY + '/', '');
 
-  ForgeUtils.deleteWebhook(hook.__self__).then(_ => {
-    return ForgeUtils.getThumbnail(urn);
-  }).then(thumbnail => {
+  ForgeUtils.getThumbnail(urn).then(thumbnail => {
     AppUtils.setThumbnail(fileId, thumbnail);
     SocketUtils.emit(fileId, 'thumbnail');
   });
@@ -83,18 +80,11 @@ app.post('/translationcomplete', (req, res) => {
   console.log('success', '- translated ' + fileId)
   res.sendStatus(200);
 });
-*/
 
 app.post('/create', (req, res) => {
   let {elements} = req.body;
   let fileId = shortid.generate() + '.rvt';
   AppUtils.addJobDetails(fileId);
-
-/*
-  ForgeUtils.createWebhook().then(_ => {
-    ForgeUtils.createEmptyResource(fileId);
-  }).then(_ => {
-*/
 
   ForgeUtils.createEmptyResource(fileId).then(_ => {
     return ForgeUtils.createSignedResource(fileId, 'write');
@@ -133,7 +123,10 @@ let server = app.listen(app.get('port'), () => {
 });
 
 
-ForgeUtils.init();
-AppUtils.init();
-NgrokUtils.init(app.get('port'));
-SocketUtils.init(server);
+NgrokUtils.init(app.get('port')).then(_ => {
+  ForgeUtils.init();
+}).then(_ => {
+  AppUtils.init();
+}).then(_ => {
+  SocketUtils.init(server);
+});

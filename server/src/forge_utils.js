@@ -11,17 +11,14 @@ class ForgeUtils {
   static CLIENT_SECRET    = process.env.CLIENT_SECRET || '';
   static AUTH_SCOPE       = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete', 'viewables:read', 'code:all'];
   static BUCKET_KEY       = 'sketchit_testing';
+  static HOOK_WORKFLOW    = NgrokUtils.isLocalUrl() ? 'local-sketchit-workflow-id' : 'fixed-sketchit-workflow-id';
   static POLLING_DELAY    = 5000;
   static _oAuth2TwoLegged = null;
 
   static init () {
     this._oAuth2TwoLegged = new ForgeSDK.AuthClientTwoLegged(this.CLIENT_ID, this.CLIENT_SECRET, this.AUTH_SCOPE, true);
     return this._oAuth2TwoLegged.authenticate().then(cr => {
-      return this.getOrCreateBucket();
-    }).then(bucketKey => {
-      if (bucketKey !== this.BUCKET_KEY) {
-        throw new Error('Could not find or create bucket!');
-      }
+      return Promise.all([this.getOrCreateBucket(), this.createOrModifyWebhook()]);
     }).catch(err => {
       console.error(err);
     });
@@ -35,7 +32,9 @@ class ForgeUtils {
       let policyKey = 'temporary';
       return BucketsApi.createBucket({bucketKey, policyKey}, {}, null, this._oAuth2TwoLegged.getCredentials());
     }).then(({body:{bucketKey}}) => {
-      return bucketKey;
+      if (bucketKey !== this.BUCKET_KEY) {
+        throw new Error('Could not find or create bucket!');
+      }
     });
   };
 
@@ -53,7 +52,33 @@ class ForgeUtils {
     });
   };
 
-/*
+  static createOrModifyWebhook () {
+    let params = {
+      url: this.FORGE_URL + '/webhooks/v1/systems/derivative/events/extraction.finished/hooks',
+      headers: {
+        Authorization: 'Bearer ' + this._oAuth2TwoLegged.getCredentials().access_token,
+      },
+      json: true
+    };
+
+    promisify(request.get)(params).then(({body:{data}}) => {
+      return Promise.all(data.map((d) => {
+        let hook = d.__self__;
+        if (d.scope.workflow !== this.HOOK_WORKFLOW)
+          return Promise.resolve(false);
+        if (d.callbackUrl === NgrokUtils.getServerUrl() + '/translationcomplete')
+          return Promise.resolve(true);
+
+        console.log('deleting hook - ' + hook)
+        return this.deleteWebhook(hook).then(_ => false);
+      })).then(values => {
+        if (!values.includes(true)) {
+          this.createWebhook();
+        }
+      });
+    });
+  };
+
   static createWebhook () {
     let params = {
       url: this.FORGE_URL + '/webhooks/v1/systems/derivative/events/extraction.finished/hooks',
@@ -63,10 +88,11 @@ class ForgeUtils {
       json: {
         callbackUrl: NgrokUtils.getServerUrl() + '/translationcomplete',
         scope: {
-          workflow: 'my-workflow-id'
+          workflow: this.HOOK_WORKFLOW
         }
       }
-    }
+    };
+    console.log('creating hook');
     return promisify(request.post)(params);
   };
 
@@ -79,7 +105,6 @@ class ForgeUtils {
     }
     return promisify(request.delete)(params);
   };
-*/
 
   static translate (objectName) {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
@@ -94,7 +119,7 @@ class ForgeUtils {
       ]
     };
     let misc = {
-      workflow: 'my-workflow-id'
+      workflow: this.HOOK_WORKFLOW
     }
     return DerivativesApi.translate({input, output, misc}, {}, null, this._oAuth2TwoLegged.getCredentials());
   };
