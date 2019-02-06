@@ -90,7 +90,7 @@ app.post('/create', (req, res) => {
     return ForgeUtils.createSignedResource(fileId, 'write');
   }).then(signedUrl => {
     let payLoad = {
-      activityId: 'SketchItDemo.SketchItActivity+test',
+      activityId: 'Revit.RvtIOSketchItActivity2018+prod',
       arguments: {
         sketchItInput: {
           url: 'data:application/json,'+JSON.stringify(elements)
