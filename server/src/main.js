@@ -30,15 +30,20 @@ app.get('/*', (req, res, next) => {
 });
 
 app.get('/token', (req, res) => {
-  let url = 'https://developer.api.autodesk.com/da/us-east/v3';
-  let clientId = process.env.CLIENT_ID || '';
-  let clientSecret = process.env.CLIENT_SECRET || '';
-  let authScope    = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete', 'viewables:read', 'code:all'];
+  let url = ForgeUtils.DAS_URL;
+  let clientId = ForgeUtils.CLIENT_ID;
+  let clientSecret = ForgeUtils.CLIENT_SECRET;
+  let authScope    = ForgeUtils.AUTH_SCOPE;
   let oAuth2TwoLegged = new ForgeSDK.AuthClientTwoLegged(clientId, clientSecret, authScope, true);
 
   oAuth2TwoLegged.authenticate().then(token => {
     res.json(token);
   });
+});
+
+app.get('/bucket', (req, res) => {
+  let bucket = ForgeUtils.BUCKET_KEY;
+  res.json(bucket);
 });
 
 app.get('/thumbnail', (req, res) => {
@@ -90,7 +95,7 @@ app.post('/create', (req, res) => {
     return ForgeUtils.createSignedResource(fileId, 'write');
   }).then(signedUrl => {
     let payLoad = {
-      activityId: 'Revit.RvtIOSketchItActivity2018+prod',
+      activityId: ForgeUtils.ACTIVITY_ID,
       arguments: {
         sketchItInput: {
           url: 'data:application/json,'+JSON.stringify(elements)
