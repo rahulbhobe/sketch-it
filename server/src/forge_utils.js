@@ -7,10 +7,11 @@ import {promisify} from 'es6-promisify';
 class ForgeUtils {
   static FORGE_URL        = 'https://developer.api.autodesk.com';
   static DAS_URL          = 'https://developer.api.autodesk.com/da/us-east/v3';
-  static CLIENT_ID        = process.env.CLIENT_ID || '';
-  static CLIENT_SECRET    = process.env.CLIENT_SECRET || '';
+  static CLIENT_ID        = process.env.FORGE_CLIENT_ID || '';
+  static CLIENT_SECRET    = process.env.FORGE_CLIENT_SECRET || '';
+  static ACTIVITY_ID      = process.env.FORGE_ACTIVITY_ID || 'Revit.RvtIOSketchItActivity2018+prod';
   static AUTH_SCOPE       = ['data:write', 'data:create', 'data:read', 'bucket:read', 'bucket:update', 'bucket:create', 'bucket:delete', 'viewables:read', 'code:all'];
-  static BUCKET_KEY       = 'sketchit_testing';
+  static BUCKET_KEY       = process.env.FORGE_BUCKET_KEY || '';
   static HOOK_WORKFLOW    = NgrokUtils.isLocalUrl() ? 'local-sketchit-workflow-id' : 'fixed-sketchit-workflow-id';
   static POLLING_DELAY    = 5000;
   static _oAuth2TwoLegged = null;
@@ -127,7 +128,7 @@ class ForgeUtils {
   static getThumbnail (urn) {
     let DerivativesApi = new ForgeSDK.DerivativesApi();
     return DerivativesApi.getThumbnail(urn, {}, null, this._oAuth2TwoLegged.getCredentials())
-                         .then(({body}) => new Buffer(body).toString('base64'))
+                         .then(({body}) => new Buffer.from(body).toString('base64'))
                          .catch(_ => '');
   };
 
